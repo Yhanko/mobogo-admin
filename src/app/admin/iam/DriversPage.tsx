@@ -21,9 +21,11 @@ import {
   ShieldAlert,
   CheckCircle,
   Eye,
+  Wallet as WalletIcon,
 } from 'lucide-react';
 import { DriverModal } from './components/DriverModal';
 import { DriverDetailsDialog } from './components/DriverDetailsDialog';
+import { ViewBalanceModal } from '../wallet/components/ViewBalanceModal';
 
 type Driver = {
   id: string;
@@ -50,6 +52,7 @@ export function DriversPage() {
   >(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [isViewBalanceOpen, setIsViewBalanceOpen] = useState(false);
 
   const { mutate: createDriver, isPending: isCreating } = useApiMutation(
     'post',
@@ -153,6 +156,15 @@ export function DriversPage() {
                 }}
               >
                 <Eye className="mr-2 h-4 w-4" /> Ver Detalhes
+              </DropdownMenuItem>
+
+              <DropdownMenuItem
+                onClick={() => {
+                  setSelectedDriver(driver);
+                  setIsViewBalanceOpen(true);
+                }}
+              >
+                <WalletIcon className="mr-2 h-4 w-4" /> Ver Saldo
               </DropdownMenuItem>
 
               {status !== 'BLOCKED' && (
@@ -262,6 +274,14 @@ export function DriversPage() {
         onOpenChange={setIsCreateOpen}
         onSubmit={handleCreateSubmit}
         isLoading={isCreating}
+      />
+
+      <ViewBalanceModal
+        open={isViewBalanceOpen}
+        onOpenChange={setIsViewBalanceOpen}
+        userName={selectedDriver?.user?.name || ''}
+        balance={(selectedDriver as any)?.currentBalance || 0}
+        currency="AKZ"
       />
     </div>
   );

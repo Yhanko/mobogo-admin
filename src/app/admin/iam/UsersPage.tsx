@@ -21,10 +21,12 @@ import {
   ShieldAlert,
   Trash2,
   Eye,
+  Wallet as WalletIcon,
 } from 'lucide-react';
 import { BlockUserDialog } from './components/BlockUserDialog';
 import { UserDetailsDialog } from './components/UserDetailsDialog';
 import { UserModal } from './components/UserModal';
+import { ViewBalanceModal } from '../wallet/components/ViewBalanceModal';
 import { TableSkeleton } from '@/components/ui/TableSkeleton';
 
 type User = {
@@ -51,6 +53,7 @@ export function UsersPage() {
   >(null);
   const [isBlockOpen, setIsBlockOpen] = useState(false);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [isViewBalanceOpen, setIsViewBalanceOpen] = useState(false);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
 
   // Mutations
@@ -177,6 +180,15 @@ export function UsersPage() {
                 }}
               >
                 <Eye className="mr-2 h-4 w-4" /> Ver Detalhes
+              </DropdownMenuItem>
+
+              <DropdownMenuItem
+                onClick={() => {
+                  setSelectedUser(user);
+                  setIsViewBalanceOpen(true);
+                }}
+              >
+                <WalletIcon className="mr-2 h-4 w-4" /> Ver Saldo
               </DropdownMenuItem>
 
               {user.isBlocked ? (
@@ -321,6 +333,14 @@ export function UsersPage() {
         onOpenChange={setIsCreateOpen}
         onSubmit={handleCreateSubmit}
         isLoading={isCreating}
+      />
+
+      <ViewBalanceModal
+        open={isViewBalanceOpen}
+        onOpenChange={setIsViewBalanceOpen}
+        userName={selectedUser?.name || ''}
+        balance={selectedUser?.wallet?.balance || 0}
+        currency={selectedUser?.wallet?.currency || 'AKZ'}
       />
     </div>
   );

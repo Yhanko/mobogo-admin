@@ -22,7 +22,9 @@ type Transaction = {
   id: string;
   type: string;
   amount: number;
-  wallet: { user: { name: string; phone: string } };
+  balanceBefore: number;
+  balanceAfter: number;
+  wallet: { balance: number; currency: string; user: { name: string; phone: string } };
   createdAt: string;
   reference: string;
 };
@@ -163,6 +165,32 @@ export function WalletPage() {
           </span>
         );
       },
+    },
+    {
+      id: 'actions',
+      cell: ({ row }) => (
+        <Button
+          variant="ghost"
+          size="sm"
+          className="text-slate-500 hover:text-blue-600"
+          onClick={() => {
+            setSelectedWallet({
+              id: row.original.wallet.id || '',
+              userId: '',
+              balance: row.original.wallet.balance,
+              currency: row.original.wallet.currency || 'AKZ',
+              user: {
+                name: row.original.wallet.user?.name,
+                phone: row.original.wallet.user?.phone,
+                role: ''
+              }
+            } as Wallet);
+            setIsViewBalanceOpen(true);
+          }}
+        >
+          <Eye className="w-4 h-4 mr-2" /> Ver Saldo Atual
+        </Button>
+      ),
     },
   ];
 
