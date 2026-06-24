@@ -10,9 +10,12 @@ import {
   ArrowDownRight,
   ArrowUpRight,
   Wallet as WalletIcon,
+  Eye,
+  EyeOff,
 } from 'lucide-react';
 import { TopupWithdrawModal } from './components/TopupWithdrawModal';
 import { GlobalTopupModal } from './components/GlobalTopupModal';
+import { ViewBalanceModal } from './components/ViewBalanceModal';
 import { TableSkeleton } from '@/components/ui/TableSkeleton';
 
 type Transaction = {
@@ -46,6 +49,7 @@ export function WalletPage() {
   const [selectedWallet, setSelectedWallet] = useState<Wallet | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isGlobalTopupOpen, setIsGlobalTopupOpen] = useState(false);
+  const [isViewBalanceOpen, setIsViewBalanceOpen] = useState(false);
 
   const { data: txData, isLoading: txLoading } = useApiQuery<{
     data: Transaction[];
@@ -124,13 +128,20 @@ export function WalletPage() {
       header: 'Operação',
       cell: ({ row }) => {
         const type = row.original.type;
-        const isCredit = ['TOPUP', 'PAYMENT', 'TRANSFER_IN', 'REFUND'].includes(
-          type
-        );
+        const isCredit = row.original.balanceAfter > row.original.balanceBefore;
+        
+        let label = TYPE_MAP[type] || type;
+        if (type === 'PAYMENT') {
+          label = isCredit ? 'Recebimento (Entrada)' : 'Pagamento (Saída)';
+        } else if (isCredit) {
+          label += ' (Entrada)';
+        } else {
+          label += ' (Saída)';
+        }
 
         return (
           <div className="flex flex-col">
-            <span className="font-medium">{TYPE_MAP[type] || type}</span>
+            <span className="font-medium">{label}</span>
             <span className="text-xs text-slate-500 font-mono">
               {row.original.reference || 'Sem Ref.'}
             </span>
@@ -143,9 +154,7 @@ export function WalletPage() {
       header: 'Valor',
       cell: ({ row }) => {
         const type = row.original.type;
-        const isCredit = ['TOPUP', 'PAYMENT', 'TRANSFER_IN', 'REFUND'].includes(
-          type
-        );
+        const isCredit = row.original.balanceAfter > row.original.balanceBefore;
         const color = isCredit ? 'text-green-600' : 'text-red-600';
         const sign = isCredit ? '+' : '-';
         return (
@@ -180,25 +189,37 @@ export function WalletPage() {
     {
       accessorKey: 'balance',
       header: 'Saldo Atual',
-      cell: ({ row }) => (
-        <span className="font-mono font-bold text-blue-600">
-          {row.original.balance} {row.original.currency}
+      cell: () => (
+        <span className="font-mono font-bold text-slate-400">
+          ****
         </span>
       ),
     },
     {
       id: 'actions',
       cell: ({ row }) => (
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => {
-            setSelectedWallet(row.original);
-            setIsModalOpen(true);
-          }}
-        >
-          <WalletIcon className="w-4 h-4 mr-2" /> Ajustar Saldo
-        </Button>
+        <div className="flex space-x-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              setSelectedWallet(row.original);
+              setIsViewBalanceOpen(true);
+            }}
+          >
+            <Eye className="w-4 h-4 mr-2" /> Ver Saldo
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              setSelectedWallet(row.original);
+              setIsModalOpen(true);
+            }}
+          >
+            <WalletIcon className="w-4 h-4 mr-2" /> Ajustar Saldo
+          </Button>
+        </div>
       ),
     },
   ];
@@ -214,9 +235,11 @@ export function WalletPage() {
             Histórico de transações e saldos das carteiras digitais.
           </p>
         </div>
-        <Button onClick={() => setIsGlobalTopupOpen(true)}>
-          <WalletIcon className="w-4 h-4 mr-2" /> Carregar Carteira
-        </Button>
+        <div className="flex space-x-2">
+          <Button onClick={() => setIsGlobalTopupOpen(true)}>
+            <WalletIcon className="w-4 h-4 mr-2" /> Carregar Carteira
+          </Button>
+        </div>
       </div>
 
       <Tabs
@@ -269,6 +292,14 @@ export function WalletPage() {
         onOpenChange={setIsGlobalTopupOpen}
         onSubmit={handleGlobalTopupSubmit}
         isLoading={isTopuping}
+      />
+
+      <ViewBalanceModal
+        open={isViewBalanceOpen}
+        onOpenChange={setIsViewBalanceOpen}
+        userName={selectedWallet?.user?.name || ''}
+        balance={selectedWallet?.balance || 0}
+        currency={selectedWallet?.currency || 'AKZ'}
       />
     </div>
   );
