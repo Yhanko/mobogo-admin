@@ -12,8 +12,8 @@ import {
   Wallet as WalletIcon,
 } from 'lucide-react';
 import { TopupWithdrawModal } from './components/TopupWithdrawModal';
-
 import { GlobalTopupModal } from './components/GlobalTopupModal';
+import { TableSkeleton } from '@/components/ui/TableSkeleton';
 
 type Transaction = {
   id: string;
@@ -231,7 +231,7 @@ export function WalletPage() {
 
         <TabsContent value="transactions" className="space-y-4">
           {txLoading ? (
-            <div>A carregar transações...</div>
+            <TableSkeleton columns={6} rows={8} />
           ) : (
             <DataTable
               columns={txColumns}
@@ -243,7 +243,7 @@ export function WalletPage() {
 
         <TabsContent value="wallets" className="space-y-4">
           {walletsLoading ? (
-            <div>A carregar carteiras...</div>
+            <TableSkeleton columns={4} rows={8} />
           ) : (
             <DataTable
               columns={walletColumns}

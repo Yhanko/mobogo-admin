@@ -25,6 +25,7 @@ import {
 import { BlockUserDialog } from './components/BlockUserDialog';
 import { UserDetailsDialog } from './components/UserDetailsDialog';
 import { UserModal } from './components/UserModal';
+import { TableSkeleton } from '@/components/ui/TableSkeleton';
 
 type User = {
   id: string;
@@ -283,7 +284,7 @@ export function UsersPage() {
       </div>
 
       {isLoading ? (
-        <div>A carregar dados...</div>
+        <TableSkeleton columns={6} rows={8} />
       ) : (
         <DataTable
           columns={columns}

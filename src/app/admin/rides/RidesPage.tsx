@@ -2,6 +2,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { useApiQuery } from '@/hooks/useApi';
 import { DataTable } from '@/components/ui/data-table';
 import { Badge } from '@/components/ui/Badge';
+import { TableSkeleton } from '@/components/ui/TableSkeleton';
 import { format } from 'date-fns';
 
 type Ride = {
@@ -111,7 +112,7 @@ export function RidesPage() {
       </div>
 
       {isLoading ? (
-        <div>A carregar dados...</div>
+        <TableSkeleton columns={6} rows={8} />
       ) : (
         <DataTable
           columns={columns}

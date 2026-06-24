@@ -9,6 +9,7 @@ import { format } from 'date-fns';
 import { Ban } from 'lucide-react';
 import { TicketModal } from './components/TicketModal';
 import { CancelTicketDialog } from './components/CancelTicketDialog';
+import { TableSkeleton } from '@/components/ui/TableSkeleton';
 
 type Ticket = {
   id: string;
@@ -159,7 +160,7 @@ export function TicketsPage() {
       </div>
 
       {isLoading ? (
-        <div>A carregar tickets...</div>
+        <TableSkeleton columns={7} rows={8} />
       ) : (
         <DataTable
           columns={columns}

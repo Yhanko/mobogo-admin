@@ -1,89 +1,108 @@
-# 🧾 Cipherpath Fiscal Engine - Frontend
+# Mobogo Admin Panel (Frontend)
 
-## 📖 Descrição do Projeto
+O **Mobogo Admin Panel** é o painel de administração e backoffice (Backoffice Web) do sistema integrado de mobilidade urbana e transportes públicos de Angola — **Mobogo**. Através deste painel, administradores conseguem gerir a frota, os passageiros, agentes no terreno, despachantes (lotadores), assim como monitorizar toda a parte financeira (carteiras digitais e bilhética).
 
-O **Cipherpath Fiscal Engine** é a interface de utilizador (Frontend) de uma plataforma corporativa para a gestão e comunicação de documentos fiscais com a Administração Geral Tributária (AGT). O sistema permite consultar faturas, enviar documentos, validar informações e gerir o perfil e configurações das séries fiscais de forma centralizada e intuitiva.
+---
 
-## 🚀 Tecnologias Utilizadas
+## 🚌 O Negócio (Domínio)
 
-A aplicação foi desenvolvida seguindo as melhores práticas modernas de desenvolvimento web:
+A aplicação suporta os fluxos críticos de transporte de passageiros através de bilhética digital. Os principais domínios geridos no painel incluem:
 
-- **React 18 & TypeScript:** Para a criação de interfaces reativas e código seguro, tipado estaticamente.
-- **Vite:** Ferramenta de build rápida e eficiente.
-- **Tailwind CSS & Shadcn UI:** Para estilização e componentes de UI modernos, consistentes e com suporte nativo a responsividade e Dark Mode.
-- **Zustand:** Gerenciamento de estado global leve e extremamente rápido (utilizado para store de requisições e autenticação).
-- **React Query (TanStack Query):** Para o gerenciamento do estado do lado do servidor, cache, sincronização e _polling_ de requisições assíncronas.
-- **Axios:** Para requisições HTTP seguras à API.
-- **React Router DOM:** Para o roteamento das páginas no modelo Single Page Application (SPA).
-- **Lucide React:** Biblioteca de ícones elegantes.
+1. **Gestão de Identidade (IAM):** Controlo e gestão de perfis para:
+   - **Passageiros:** Utilizadores finais do transporte.
+   - **Motoristas/Taxistas:** Operadores dos veículos.
+   - **Agentes:** Pessoal autorizado a emitir bilhetes no terreno.
+   - **Lotadores:** Despachantes e organizadores de paragens.
+2. **Carteira Digital (Wallet):** Gestão de saldos virtuais associados a cada passageiro e motorista. Carregamentos (Top-ups), levantamentos e histórico global de transações (ex: integração com Multicaixa Express).
+3. **Bilhética (Tickets):** Emissão de bilhetes e passes digitais com QR Code dinâmico, dedução atómica na carteira do utilizador aquando da leitura do bilhete no veículo, e cancelamentos.
+4. **Viagens e Localização (Rides & Location):** Acompanhamento do estado das viagens em tempo real.
 
-## 📂 Organização de Pastas
+---
 
-A estrutura do projeto foi pensada para garantir escalabilidade e fácil manutenção:
+## 🚀 Tecnologias e Stack
+
+Este projeto foi construído com as melhores e mais modernas práticas do ecossistema React, focado em performance, tipagem forte e interfaces bonitas:
+
+- **Core:** [React 18](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/)
+- **Bundler:** [Vite](https://vitejs.dev/) (Rápido e otimizado)
+- **Routing:** [React Router DOM](https://reactrouter.com/) (Navegação SPA)
+- **Data Fetching & Cache:** [TanStack React Query](https://tanstack.com/query/v5) (Gestão de estados assíncronos e cache da API)
+- **Styling:** [Tailwind CSS](https://tailwindcss.com/) (Estilização utilitária)
+- **Componentes UI:** [shadcn/ui](https://ui.shadcn.com/) (Componentes acessíveis construídos com [Radix UI](https://www.radix-ui.com/))
+- **Formulários & Validação:** [React Hook Form](https://react-hook-form.com/) + [Zod](https://zod.dev/)
+- **Gestão de Estado Global:** [Zustand](https://zustand-demo.pmnd.rs/)
+- **Ícones:** [Lucide React](https://lucide.dev/)
+- **Data & Tabela:** `@tanstack/react-table` (Tabelas de dados ricas em funcionalidades)
+
+---
+
+## 📁 Arquitetura e Organização de Pastas
+
+A arquitetura do frontend baseia-se numa separação lógica por *features/módulos*, para escalar de forma limpa:
 
 ```text
 src/
-├── app/          # View Components e páginas do sistema (ex: Dashboard, Faturas, Perfil, Autenticação)
-├── components/   # Componentes reutilizáveis (UI global, Layouts, ThemeToggle)
-├── constants/    # Constantes da aplicação (ex: itens de navegação)
-├── hooks/        # Custom Hooks (ex: useAgtPolling, useAuth)
-├── lib/          # Utilitários globais e configurações de bibliotecas externas (ex: api.ts, utils.ts)
-├── schemas/      # Definição e validação de estruturas de dados (Zod, tipos TS)
-├── service/      # Camada de comunicação com a API (funções de fetch)
-└── stores/       # Lógica de estado global do Zustand
+├── app/                  # (Pages/Routes) Lógica de páginas agrupada por funcionalidade
+│   ├── admin/
+│   │   ├── dashboard/    # Visão geral e métricas
+│   │   ├── iam/          # Utilizadores, Motoristas, Agentes
+│   │   ├── lotadores/    # Gestão de Lotadores
+│   │   ├── rides/        # Histórico de viagens
+│   │   ├── tickets/      # Gestão de bilhetes digitais
+│   │   └── wallet/       # Carregamentos e transações financeiras
+│   └── auth/             # Login, Recuperação de Senha
+│
+├── components/           # Componentes UI reutilizáveis (Dumb Components)
+│   ├── layouts/          # Estruturas base de página (AdminLayout, Sidebar)
+│   └── ui/               # Componentes base (Botões, Inputs, Dialogs, Skeletons - shadcn)
+│
+├── hooks/                # Custom React Hooks
+│   ├── useApi.ts         # Wrapper do TanStack Query p/ integração com API
+│   └── use-toast.ts      # Hook de notificações globais
+│
+├── lib/                  # Utilitários, configurações e constantes globais
+│   ├── api.ts            # Configuração base do Axios (Interceptors, Tokens)
+│   └── utils.ts          # Helpers de CSS (ex: cn wrapper do clsx/tailwind-merge)
+│
+└── main.tsx              # Ponto de entrada (Entrypoint) da aplicação React
 ```
 
-## 🏗️ Arquitetura Usada e Vantagens
+---
 
-A arquitetura do projeto baseia-se numa forte **Separação de Preocupações (Separation of Concerns)** e **Componentização**:
+## 🛠️ Como Iniciar (Setup Local)
 
-- **Serviços Isolados:** A comunicação com o Backend está toda concentrada na pasta `service`, separando as chamadas HTTP dos componentes visuais.
-- **Gestão de Estado Desacoplada:** O uso do Zustand para estados globais (como a fila de pedidos à AGT) e do React Query para cache de dados assíncronos tira a complexidade do ciclo de vida dos componentes.
-- **Componentes de UI Modulares:** Através do padrão introduzido pelo _Shadcn UI_, os componentes de baixo nível são totalmente independentes e altamente personalizáveis.
+### 1. Pré-requisitos
+- [Node.js](https://nodejs.org/en/) (Versão 18+)
+- Gestor de pacotes (`npm`, `yarn` ou `pnpm`)
 
-**Vantagens:**
-
-- **Escalabilidade:** Novas páginas e funcionalidades podem ser adicionadas sem impacto em módulos existentes.
-- **Manutenção Simplificada:** A localização de bugs torna-se previsível.
-- **Experiência de Utilizador (UX):** Graças à arquitetura reativa com React Query e Zustand, a plataforma fornece _feedback_ em tempo real (como o _polling_ de resposta da AGT) sem bloquear a interface.
-
-## ⚙️ Como Executar o Projeto
-
-Siga os passos abaixo para configurar e rodar o projeto na sua máquina local:
-
-### 1. Clonar o repositório
-
-```bash
-git clone <url-do-repositorio>
-cd cipherpah-frontend
-```
-
-### 2. Instalar as dependências
-
+### 2. Instalar Dependências
+Na raiz do diretório `mobogo-admin-frontend`, execute:
 ```bash
 npm install
 ```
 
-### 3. Configurar as Variáveis de Ambiente
-
-Crie um ficheiro `.env` na raiz do projeto e defina a URL da API do Backend:
-
+### 3. Variáveis de Ambiente
+Crie um ficheiro `.env` na raiz do projeto e configure o endpoint da API:
 ```env
 VITE_API_URL=http://localhost:3000/api
 ```
 
-_(Altere o valor para a URL correspondente ao seu ambiente de desenvolvimento backend)._
-
-### 4. Rodar o Projeto
-
+### 4. Executar Servidor de Desenvolvimento
 ```bash
 npm run dev
 ```
+A aplicação ficará disponível em `http://localhost:3333` (ou na porta definida pelo Vite).
 
-O projeto estará disponível no endereço indicado no terminal (por norma, `http://localhost:5173`).
+---
 
-## ✍️ Autor
+## 📐 Padrões Adotados (Guidelines)
 
-**Desenvolvido por:**
-Romeu Cajamba  
-📧 Email: [romeucajamba@gmail.com](mailto:romeucajamba@gmail.com)
+1. **Carregamento de Dados (Skeletons):**
+   - Utilizamos o componente `TableSkeleton` durante o estado `isLoading` nas chamadas via *React Query*. Isto melhora massivamente a experiência do utilizador ao evitar ecrãs em branco ou *layout shifts*.
+2. **Separação de Responsabilidades:**
+   - As Páginas (`src/app`) são responsáveis por orquestrar a lógica (buscar dados, lidar com estados de formulário).
+   - Componentes UI (`src/components`) não devem conhecer o contexto de negócio. Devem receber propriedades e emitir eventos (callbacks).
+3. **Formatação e Validação:**
+   - Todos os formulários que interagem com a API usam a combinação `React Hook Form` + esquema `Zod` de modo a barrar erros de input antes sequer de tocarem na rede.
+4. **Layout Colapsável:**
+   - A *Sidebar* suporta um modo compacto para expandir o ecrã útil ao analisar as extensas tabelas de dados de transações e bilhética.

@@ -5,6 +5,7 @@ import { DataTable } from '@/components/ui/data-table';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/Badge';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
+import { TableSkeleton } from '@/components/ui/TableSkeleton';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -215,7 +216,7 @@ export function LotadoresPage() {
       </div>
 
       {isLoading ? (
-        <div>A carregar dados...</div>
+        <TableSkeleton columns={5} rows={6} />
       ) : (
         <DataTable
           columns={columns}
