@@ -15,7 +15,23 @@ export const tenantLogin = async (
   email: string,
   password: string
 ): Promise<{ access_token: string; token_type: string }> => {
-  const { data } = await api.post<TokenResponse>('/login', { email, password });
+  const response = await api.post('/auth/login', {
+    displayId: email,
+    credential: password,
+  });
+  const responseData = response.data.data; // because backend wraps in { success: true, data: { accessToken: "..." } }
+  return {
+    access_token: responseData.accessToken,
+    token_type: 'Bearer',
+  };
+};
+
+export const tenantRegister = async (payload: {
+  name: string;
+  email: string;
+  password: string;
+}) => {
+  const { data } = await api.post('/auth/register-admin', payload);
   return data;
 };
 

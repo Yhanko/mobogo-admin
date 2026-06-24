@@ -13,7 +13,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { MoreHorizontal, ShieldOff, ShieldAlert, CheckCircle } from 'lucide-react';
+import {
+  MoreHorizontal,
+  ShieldOff,
+  ShieldAlert,
+  CheckCircle,
+} from 'lucide-react';
+import { AgentModal } from './components/AgentModal';
 
 type Agent = {
   id: string;
@@ -27,21 +33,50 @@ type Agent = {
 };
 
 export function AgentsPage() {
-  const { data, isLoading } = useApiQuery<{ data: Agent[], meta: any }>(['agents'], '/iam/agents');
-  
-  const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null);
-  const [dialogAction, setDialogAction] = useState<'activate' | 'deactivate' | null>(null);
+  const { data, isLoading } = useApiQuery<{ data: Agent[]; meta: any }>(
+    ['agents'],
+    '/iam/agents'
+  );
 
-  const { mutate: activateAgent } = useApiMutation('patch', (id: string) => `/iam/agents/${id}/activate`, { invalidateKeys: [['agents']], showSuccessToast: true });
-  const { mutate: deactivateAgent } = useApiMutation('patch', (id: string) => `/iam/agents/${id}/deactivate`, { invalidateKeys: [['agents']], showSuccessToast: true });
+  const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null);
+  const [dialogAction, setDialogAction] = useState<
+    'activate' | 'deactivate' | null
+  >(null);
+
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+
+  const { mutate: createAgent, isPending: isCreating } = useApiMutation(
+    'post',
+    '/iam/agents',
+    { invalidateKeys: [['agents']], showSuccessToast: true }
+  );
+
+  const { mutate: activateAgent } = useApiMutation(
+    'patch',
+    (id: string) => `/iam/agents/${id}/activate`,
+    { invalidateKeys: [['agents']], showSuccessToast: true }
+  );
+  const { mutate: deactivateAgent } = useApiMutation(
+    'patch',
+    (id: string) => `/iam/agents/${id}/deactivate`,
+    { invalidateKeys: [['agents']], showSuccessToast: true }
+  );
 
   const handleAction = () => {
     if (!selectedAgent || !dialogAction) return;
-    
-    if (dialogAction === 'activate') activateAgent({}, { onSuccess: () => setSelectedAgent(null) });
-    if (dialogAction === 'deactivate') deactivateAgent({}, { onSuccess: () => setSelectedAgent(null) });
-    
+
+    if (dialogAction === 'activate')
+      activateAgent({}, { onSuccess: () => setSelectedAgent(null) });
+    if (dialogAction === 'deactivate')
+      deactivateAgent({}, { onSuccess: () => setSelectedAgent(null) });
+
     setDialogAction(null);
+  };
+
+  const handleCreateSubmit = (data: any) => {
+    createAgent(data, {
+      onSuccess: () => setIsCreateOpen(false),
+    });
   };
 
   const columns: ColumnDef<Agent>[] = [
@@ -64,7 +99,9 @@ export function AgentsPage() {
     {
       accessorKey: 'dailyLimit',
       header: 'Limite Diário',
-      cell: ({ row }) => <span className="font-mono">{row.getValue('dailyLimit')} AKZ</span>,
+      cell: ({ row }) => (
+        <span className="font-mono">{row.getValue('dailyLimit')} AKZ</span>
+      ),
     },
     {
       accessorKey: 'status',
@@ -91,13 +128,24 @@ export function AgentsPage() {
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Ações</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              
+
               {agent.isActive ? (
-                <DropdownMenuItem onClick={() => { setSelectedAgent(agent); setDialogAction('deactivate'); }}>
-                  <ShieldAlert className="mr-2 h-4 w-4 text-orange-600" /> Desativar
+                <DropdownMenuItem
+                  onClick={() => {
+                    setSelectedAgent(agent);
+                    setDialogAction('deactivate');
+                  }}
+                >
+                  <ShieldAlert className="mr-2 h-4 w-4 text-orange-600" />{' '}
+                  Desativar
                 </DropdownMenuItem>
               ) : (
-                <DropdownMenuItem onClick={() => { setSelectedAgent(agent); setDialogAction('activate'); }}>
+                <DropdownMenuItem
+                  onClick={() => {
+                    setSelectedAgent(agent);
+                    setDialogAction('activate');
+                  }}
+                >
                   <CheckCircle className="mr-2 h-4 w-4 text-green-600" /> Ativar
                 </DropdownMenuItem>
               )}
@@ -110,9 +158,20 @@ export function AgentsPage() {
 
   const getDialogContent = () => {
     switch (dialogAction) {
-      case 'activate': return { title: 'Ativar Agente', desc: `Deseja ativar as permissões do agente ${selectedAgent?.user?.name}?`, dest: false };
-      case 'deactivate': return { title: 'Desativar Agente', desc: `Deseja remover as permissões do agente ${selectedAgent?.user?.name}?`, dest: true };
-      default: return { title: '', desc: '', dest: false };
+      case 'activate':
+        return {
+          title: 'Ativar Agente',
+          desc: `Deseja ativar as permissões do agente ${selectedAgent?.user?.name}?`,
+          dest: false,
+        };
+      case 'deactivate':
+        return {
+          title: 'Desativar Agente',
+          desc: `Deseja remover as permissões do agente ${selectedAgent?.user?.name}?`,
+          dest: true,
+        };
+      default:
+        return { title: '', desc: '', dest: false };
     }
   };
 
@@ -123,15 +182,21 @@ export function AgentsPage() {
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Agentes</h1>
-          <p className="text-sm text-slate-500">Gestão dos agentes no terreno e os seus limites de emissão.</p>
+          <p className="text-sm text-slate-500">
+            Gestão dos agentes no terreno e os seus limites de emissão.
+          </p>
         </div>
-        <Button>Novo Agente</Button>
+        <Button onClick={() => setIsCreateOpen(true)}>Novo Agente</Button>
       </div>
 
       {isLoading ? (
         <div>A carregar dados...</div>
       ) : (
-        <DataTable columns={columns} data={data?.data || []} searchKey="name" />
+        <DataTable
+          columns={columns}
+          data={(data as any)?.items || (data as any)?.data || []}
+          searchKey="name"
+        />
       )}
 
       <ConfirmDialog
@@ -141,6 +206,13 @@ export function AgentsPage() {
         description={desc}
         onConfirm={handleAction}
         destructive={dest}
+      />
+
+      <AgentModal
+        open={isCreateOpen}
+        onOpenChange={setIsCreateOpen}
+        onSubmit={handleCreateSubmit}
+        isLoading={isCreating}
       />
     </div>
   );

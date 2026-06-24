@@ -1,4 +1,4 @@
-import * as React from "react"
+import * as React from 'react';
 import {
   ColumnDef,
   flexRender,
@@ -9,7 +9,7 @@ import {
   getSortedRowModel,
   ColumnFiltersState,
   getFilteredRowModel,
-} from "@tanstack/react-table"
+} from '@tanstack/react-table';
 
 import {
   Table,
@@ -18,14 +18,14 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "./table"
-import { Button } from "./button"
-import { Input } from "./input"
+} from './table';
+import { Button } from './button';
+import { Input } from './input';
 
 interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[]
-  data: TData[]
-  searchKey?: string
+  columns: ColumnDef<TData, TValue>[];
+  data: TData[];
+  searchKey?: string;
 }
 
 export function DataTable<TData, TValue>({
@@ -33,10 +33,10 @@ export function DataTable<TData, TValue>({
   data,
   searchKey,
 }: DataTableProps<TData, TValue>) {
-  const [sorting, setSorting] = React.useState<SortingState>([])
+  const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
-  )
+  );
 
   const table = useReactTable({
     data,
@@ -51,20 +51,33 @@ export function DataTable<TData, TValue>({
       sorting,
       columnFilters,
     },
-  })
+  });
+
+  const [searchValue, setSearchValue] = React.useState('');
 
   return (
     <div>
       {searchKey && (
-        <div className="flex items-center py-4">
+        <div className="flex items-center py-4 gap-2">
           <Input
             placeholder={`Procurar...`}
-            value={(table.getColumn(searchKey)?.getFilterValue() as string) ?? ""}
-            onChange={(event) =>
-              table.getColumn(searchKey)?.setFilterValue(event.target.value)
-            }
+            value={searchValue}
+            onChange={(event) => setSearchValue(event.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                table.getColumn(searchKey)?.setFilterValue(searchValue);
+              }
+            }}
             className="max-w-sm"
           />
+          <Button
+            variant="secondary"
+            onClick={() =>
+              table.getColumn(searchKey)?.setFilterValue(searchValue)
+            }
+          >
+            Buscar
+          </Button>
         </div>
       )}
       <div className="rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950">
@@ -82,7 +95,7 @@ export function DataTable<TData, TValue>({
                             header.getContext()
                           )}
                     </TableHead>
-                  )
+                  );
                 })}
               </TableRow>
             ))}
@@ -92,18 +105,24 @@ export function DataTable<TData, TValue>({
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
+                  data-state={row.getIsSelected() && 'selected'}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
                     </TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
                   Sem resultados.
                 </TableCell>
               </TableRow>
@@ -130,5 +149,5 @@ export function DataTable<TData, TValue>({
         </Button>
       </div>
     </div>
-  )
+  );
 }

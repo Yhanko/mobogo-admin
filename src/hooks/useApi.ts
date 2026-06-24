@@ -14,7 +14,7 @@ export function useApiQuery<T>(key: string[], url: string, params?: any) {
     queryKey: key,
     queryFn: async (): Promise<T> => {
       const { data } = await api.get(url, { params });
-      return data;
+      return data?.data ?? data;
     },
   });
 }
@@ -29,28 +29,52 @@ export function useApiMutation<TData = any, TVariables = any>(
 
   return useMutation<TData, Error, TVariables>({
     mutationFn: async (variables) => {
-      const endpoint = typeof url === 'function' ? url(variables) : url;
+      let endpoint = '';
+      let body = variables;
+
+      if (typeof url === 'function') {
+        endpoint = url(variables);
+        
+        // Se passamos um objecto contendo id e data, o body será apenas o data
+        if (
+          variables && 
+          typeof variables === 'object' && 
+          'data' in variables && 
+          Object.keys(variables).includes('id') // pode ter outros também
+        ) {
+          body = (variables as any).data;
+        } 
+        // Se passamos apenas uma string (ex: um ID), o body não deve ser a string
+        else if (typeof variables === 'string' || typeof variables === 'number') {
+          body = {} as any;
+        }
+      } else {
+        endpoint = url;
+      }
+
       let response;
-      
+
       switch (method) {
         case 'delete':
-          response = await api.delete(endpoint, { data: variables });
+          response = await api.delete(endpoint, { data: body });
           break;
         case 'post':
-          response = await api.post(endpoint, variables);
+          response = await api.post(endpoint, body);
           break;
         case 'put':
-          response = await api.put(endpoint, variables);
+          response = await api.put(endpoint, body);
           break;
         case 'patch':
-          response = await api.patch(endpoint, variables);
+          response = await api.patch(endpoint, body);
           break;
       }
       return response?.data;
     },
     onSuccess: () => {
       if (options?.showSuccessToast) {
-        toast.success(options.successMessage || 'Operação realizada com sucesso!');
+        toast.success(
+          options.successMessage || 'Operação realizada com sucesso!'
+        );
       }
       if (options?.invalidateKeys) {
         options.invalidateKeys.forEach((key) => {
@@ -60,7 +84,8 @@ export function useApiMutation<TData = any, TVariables = any>(
     },
     onError: (error: any) => {
       if (options?.showErrorToast !== false) {
-        const msg = error.response?.data?.message || error.message || 'Ocorreu um erro';
+        const msg =
+          error.response?.data?.message || error.message || 'Ocorreu um erro';
         toast.error(msg);
       }
     },

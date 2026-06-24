@@ -31,10 +31,11 @@ export const AboutSection = () => {
             <span className="text-primary text-glow-gold">alta precisão.</span>
           </h2>
           <p className="text-lg md:text-xl text-text-secondary leading-relaxed">
-            A MobGo nasceu da necessidade de modernizar e descomplicar o pagamento
-            e gestão de táxis em Angola. Não somos apenas um aplicativo; somos a
-            infraestrutura que conecta passageiros, motoristas e lotadores numa
-            única rede unificada, segura e sem burocracias.
+            A MobGo nasceu da necessidade de modernizar e descomplicar o
+            pagamento e gestão de táxis em Angola. Não somos apenas um
+            aplicativo; somos a infraestrutura que conecta passageiros,
+            motoristas e lotadores numa única rede unificada, segura e sem
+            burocracias.
           </p>
         </div>
 
@@ -45,8 +46,8 @@ export const AboutSection = () => {
               Uma solução, múltiplas escalas
             </h3>
             <p className="text-text-secondary mt-3">
-              Como resolvemos os problemas da sua operação, quer seja
-              motorista, lotador ou passageiro.
+              Como resolvemos os problemas da sua operação, quer seja motorista,
+              lotador ou passageiro.
             </p>
           </div>
 
@@ -166,7 +167,8 @@ export const AboutSection = () => {
               </h4>
               <p className="text-sm text-text-secondary">
                 Carregue a sua Wallet (carteira digital). Se for motorista,
-                adicione os dados da viatura e ligue-se aos seus parceiros lotadores.
+                adicione os dados da viatura e ligue-se aos seus parceiros
+                lotadores.
               </p>
             </div>
 
@@ -179,8 +181,9 @@ export const AboutSection = () => {
                 Viagens Imediatas
               </h4>
               <p className="text-sm text-text-secondary">
-                Está pronto para rodar. Compre bilhetes, escaneie no táxi e viaje
-                com pagamentos validados em tempo real, sem dinheiro em mãos.
+                Está pronto para rodar. Compre bilhetes, escaneie no táxi e
+                viaje com pagamentos validados em tempo real, sem dinheiro em
+                mãos.
               </p>
             </div>
           </div>

@@ -30,21 +30,21 @@ export const docsData = [
         </h3>
         <ul className="list-disc pl-6 space-y-3 text-text-secondary mt-4">
           <li>
-            <strong className="text-text-primary">Gestão de Utilizadores:</strong>{' '}
+            <strong className="text-text-primary">
+              Gestão de Utilizadores:
+            </strong>{' '}
             Adicionar, bloquear e verificar perfis de motoristas, lotadores e
             passageiros.
           </li>
           <li>
-            <strong className="text-text-primary">
-              Controlo Financeiro:
-            </strong>{' '}
+            <strong className="text-text-primary">Controlo Financeiro:</strong>{' '}
             Acompanhar carregamentos, pagamentos de viagens e transferências na
             Wallet global.
           </li>
           <li>
             <strong className="text-text-primary">Gestão de Frota:</strong>{' '}
-            Monitorizar as viagens em tempo real e a localização GPS das viaturas
-            registadas.
+            Monitorizar as viagens em tempo real e a localização GPS das
+            viaturas registadas.
           </li>
           <li>
             <strong className="text-text-primary">Auditoria e Logs:</strong>{' '}
@@ -99,7 +99,8 @@ export const docsData = [
               Viagens Concluídas
             </h5>
             <p className="text-xs text-text-secondary mt-1">
-              O número total de corridas pagas com sucesso através da plataforma.
+              O número total de corridas pagas com sucesso através da
+              plataforma.
             </p>
           </div>
           <div className="p-4 rounded-lg bg-surface border border-border-subtle">
@@ -141,26 +142,33 @@ export const docsData = [
           Gestão de Viagens e Tickets
         </h1>
         <p className="text-text-secondary text-lg leading-relaxed">
-          A aba de Tickets (Bilhetes de Viagem) permite monitorar as
-          transações individuais que ocorrem entre passageiros e motoristas.
+          A aba de Tickets (Bilhetes de Viagem) permite monitorar as transações
+          individuais que ocorrem entre passageiros e motoristas.
         </p>
 
-        <h3 className="text-xl font-bold text-text-primary mt-8">Listagem de Bilhetes</h3>
+        <h3 className="text-xl font-bold text-text-primary mt-8">
+          Listagem de Bilhetes
+        </h3>
         <p className="text-text-secondary mt-2">
-          Pode procurar bilhetes pelo código, motorista ou passageiro. O estado do bilhete pode ser:
+          Pode procurar bilhetes pelo código, motorista ou passageiro. O estado
+          do bilhete pode ser:
         </p>
         <ul className="list-disc pl-6 space-y-2 text-text-secondary mt-4">
           <li>
-            <strong>PENDENTE:</strong> O passageiro comprou mas ainda não escaneou no táxi.
+            <strong>PENDENTE:</strong> O passageiro comprou mas ainda não
+            escaneou no táxi.
           </li>
           <li>
-            <strong>USADO:</strong> A viagem foi efetivada e o motorista recebeu o pagamento.
+            <strong>USADO:</strong> A viagem foi efetivada e o motorista recebeu
+            o pagamento.
           </li>
           <li>
-            <strong>CANCELADO:</strong> O utilizador anulou o bilhete e o valor foi devolvido.
+            <strong>CANCELADO:</strong> O utilizador anulou o bilhete e o valor
+            foi devolvido.
           </li>
           <li>
-            <strong>EXPIRADO:</strong> Prazo de validade do bilhete foi ultrapassado.
+            <strong>EXPIRADO:</strong> Prazo de validade do bilhete foi
+            ultrapassado.
           </li>
         </ul>
 
@@ -200,9 +208,9 @@ export const docsData = [
             contacto, e regularizar documentos dos motoristas.
           </p>
           <p>
-            <strong>Bloqueio de Contas:</strong> Perante comportamento fraudulento,
-            a conta pode ser desativada com um motivo documentado, impedindo o
-            acesso à App.
+            <strong>Bloqueio de Contas:</strong> Perante comportamento
+            fraudulento, a conta pode ser desativada com um motivo documentado,
+            impedindo o acesso à App.
           </p>
           <p>
             <strong>Parcerias de Lotador:</strong> Visualize e faça a gestão dos
@@ -222,9 +230,8 @@ export const docsData = [
           Wallet e Finanças
         </h1>
         <p className="text-text-secondary text-lg leading-relaxed">
-          A Wallet (Carteira) é o coração financeiro da MobGo. Esta página
-          exibe o saldo consolidado de um utilizador e o seu extrato de
-          movimentos.
+          A Wallet (Carteira) é o coração financeiro da MobGo. Esta página exibe
+          o saldo consolidado de um utilizador e o seu extrato de movimentos.
         </p>
 
         <h3 className="text-xl font-bold text-text-primary mt-8">
@@ -235,10 +242,22 @@ export const docsData = [
           divergências. Estas incluem:
         </p>
         <ul className="list-disc pl-6 space-y-2 text-text-secondary mt-4">
-          <li><strong>TOPUP (Carregamento):</strong> Dinheiro que entrou via banco, multicaixa ou agente.</li>
-          <li><strong>PAYMENT (Pagamento):</strong> Débito por compra de bilhete de táxi.</li>
-          <li><strong>TRANSFER_IN / OUT:</strong> Transferência de fundos entre contas MobGo.</li>
-          <li><strong>WITHDRAWAL (Levantamento):</strong> Dinheiro retirado do sistema para conta bancária do Motorista.</li>
+          <li>
+            <strong>TOPUP (Carregamento):</strong> Dinheiro que entrou via
+            banco, multicaixa ou agente.
+          </li>
+          <li>
+            <strong>PAYMENT (Pagamento):</strong> Débito por compra de bilhete
+            de táxi.
+          </li>
+          <li>
+            <strong>TRANSFER_IN / OUT:</strong> Transferência de fundos entre
+            contas MobGo.
+          </li>
+          <li>
+            <strong>WITHDRAWAL (Levantamento):</strong> Dinheiro retirado do
+            sistema para conta bancária do Motorista.
+          </li>
         </ul>
       </div>
     ),
@@ -272,7 +291,8 @@ export const docsData = [
         </h3>
         <p className="text-text-secondary mt-2">
           Selecione uma data e um motorista para reproduzir a rota efetuada. É
-          útil para resolver queixas de desvio de rota ou para análise de tráfego.
+          útil para resolver queixas de desvio de rota ou para análise de
+          tráfego.
         </p>
       </div>
     ),

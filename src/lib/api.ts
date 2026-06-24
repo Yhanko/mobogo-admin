@@ -45,9 +45,14 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      // Limpa a sessão e redireciona para login
-      document.cookie = 'agt_session=; Max-Age=0; path=/';
-      window.location.href = '/login';
+      const isLoginRequest = error.config?.url?.includes('/login');
+      // Apenas redireciona e limpa a sessão se não for um erro do próprio login
+      if (!isLoginRequest) {
+        document.cookie = 'agt_session=; Max-Age=0; path=/';
+        if (window.location.pathname !== '/login') {
+          window.location.href = '/login';
+        }
+      }
     }
     return Promise.reject(error);
   }

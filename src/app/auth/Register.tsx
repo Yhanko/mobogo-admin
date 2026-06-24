@@ -19,6 +19,8 @@ import { cn } from '@/lib/utils';
 import { Logo } from '@/components/ui/Logo';
 import { registerSchema } from '@/schemas';
 import axios from 'axios';
+import { tenantRegister } from '@/service/tenant.service';
+import { toast } from 'sonner';
 
 type RegisterFormValues = z.infer<typeof registerSchema>;
 
@@ -38,17 +40,19 @@ export const Register: React.FC = () => {
   const onSubmit = async (data: RegisterFormValues): Promise<void> => {
     setServerError(null);
     try {
-      // Temporarily mock the registration logic since tenant.service.ts doesn't have it yet
-      // await tenantRegister(data);
-      console.log('Registo:', data);
-      
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      
-      // Redirect to login after successful registration
+      // Call the actual API
+      await tenantRegister({
+        name: data.name,
+        email: data.email,
+        password: data.password,
+      });
+
+      toast.success('Conta criada com sucesso!');
       navigate('/login');
     } catch (err) {
-      setServerError(resolveError(err));
+      const msg = resolveError(err);
+      setServerError(msg);
+      toast.error(msg);
     }
   };
 
@@ -191,10 +195,15 @@ export const Register: React.FC = () => {
                 'Criar Conta'
               )}
             </button>
-            
+
             <div className="text-center mt-4">
-              <span className="text-sm text-text-secondary">Já tem uma conta? </span>
-              <Link to="/login" className="text-sm font-bold text-primary hover:underline">
+              <span className="text-sm text-text-secondary">
+                Já tem uma conta?{' '}
+              </span>
+              <Link
+                to="/login"
+                className="text-sm font-bold text-primary hover:underline"
+              >
                 Iniciar Sessão
               </Link>
             </div>
@@ -209,11 +218,12 @@ export const Register: React.FC = () => {
   );
 };
 
-/* ── Utilitários ────────────────────────────────────────────────────────────── */
-
 function resolveError(err: unknown): string {
   if (axios.isAxiosError(err)) {
     const data = err.response?.data;
+    if (data?.message) {
+      return Array.isArray(data.message) ? data.message[0] : data.message;
+    }
     return data?.error || data?.detail || 'Erro ao registar. Tente novamente.';
   }
   return 'Erro inesperado. Tente novamente.';

@@ -51,7 +51,9 @@ export const HeroSection = () => {
             </h1>
 
             <p className="text-lg md:text-xl text-text-secondary max-w-[600px] leading-relaxed">
-              A plataforma MobGo moderniza o pagamento de táxis, interligando passageiros, motoristas e despachantes numa única carteira digital segura e rápida.
+              A plataforma MobGo moderniza o pagamento de táxis, interligando
+              passageiros, motoristas e despachantes numa única carteira digital
+              segura e rápida.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 pt-4">

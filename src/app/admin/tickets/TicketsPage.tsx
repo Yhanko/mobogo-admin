@@ -7,6 +7,8 @@ import { Badge } from '@/components/ui/Badge';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { format } from 'date-fns';
 import { Ban } from 'lucide-react';
+import { TicketModal } from './components/TicketModal';
+import { CancelTicketDialog } from './components/CancelTicketDialog';
 
 type Ticket = {
   id: string;
@@ -18,38 +20,76 @@ type Ticket = {
 };
 
 export function TicketsPage() {
-  // Using /tickets/my as a placeholder for a global tickets endpoint
-  const { data, isLoading } = useApiQuery<{ data: Ticket[], meta: any }>(['tickets'], '/tickets/my');
-  
+  const { data, isLoading } = useApiQuery<{ data: Ticket[]; meta: any }>(
+    ['tickets'],
+    '/tickets'
+  );
+
   const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
+  const [isCancelOpen, setIsCancelOpen] = useState(false);
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
 
-  const { mutate: cancelTicket } = useApiMutation('patch', (id: string) => `/tickets/${id}/cancel`, { invalidateKeys: [['tickets']], showSuccessToast: true });
+  const { mutate: createTicket, isPending: isCreating } = useApiMutation(
+    'post',
+    '/tickets',
+    { invalidateKeys: [['tickets']], showSuccessToast: true }
+  );
+  const { mutate: cancelTicket, isPending: isCanceling } = useApiMutation(
+    'patch',
+    (id: string) => `/tickets/${id}/cancel`,
+    { invalidateKeys: [['tickets']], showSuccessToast: true }
+  );
 
-  const handleCancel = () => {
+  const { mutate: simulateScan, isPending: isSimulating } = useApiMutation(
+    'post',
+    (id: string) => `/tickets/admin/${id}/simulate-scan`,
+    { invalidateKeys: [['tickets'], ['wallet-history'], ['wallets']], showSuccessToast: true }
+  );
+
+  const handleCancelConfirm = (reason: string) => {
     if (!selectedTicket) return;
-    cancelTicket({ reason: 'Cancelado pelo Super Admin' } as any, { onSuccess: () => setSelectedTicket(null) });
+    cancelTicket({ reason } as any, {
+      onSuccess: () => {
+        setIsCancelOpen(false);
+        setSelectedTicket(null);
+      },
+    });
+  };
+
+  const handleCreateSubmit = (data: any) => {
+    createTicket(data, {
+      onSuccess: () => setIsCreateOpen(false),
+    });
   };
 
   const columns: ColumnDef<Ticket>[] = [
     {
       accessorKey: 'reference',
       header: 'Referência',
-      cell: ({ row }) => <span className="font-mono text-xs">{row.getValue('reference')}</span>,
+      cell: ({ row }) => (
+        <span className="font-mono text-xs">{row.getValue('reference')}</span>
+      ),
     },
     {
       accessorKey: 'passenger',
       header: 'Passageiro',
       cell: ({ row }) => (
         <div>
-          <div className="font-medium">{row.original.passenger?.name || 'N/A'}</div>
-          <div className="text-xs text-slate-500">{row.original.passenger?.phone}</div>
+          <div className="font-medium">
+            {row.original.passenger?.name || 'N/A'}
+          </div>
+          <div className="text-xs text-slate-500">
+            {row.original.passenger?.phone}
+          </div>
         </div>
       ),
     },
     {
       accessorKey: 'price',
       header: 'Preço',
-      cell: ({ row }) => <span className="font-mono">{row.getValue('price')} AKZ</span>,
+      cell: ({ row }) => (
+        <span className="font-mono">{row.getValue('price')} AKZ</span>
+      ),
     },
     {
       accessorKey: 'expiresAt',
@@ -65,8 +105,10 @@ export function TicketsPage() {
       header: 'Estado',
       cell: ({ row }) => {
         const status = row.getValue('status') as string;
-        if (status === 'USED') return <Badge className="bg-slate-800">Utilizado</Badge>;
-        if (status === 'CANCELLED') return <Badge variant="destructive">Cancelado</Badge>;
+        if (status === 'USED')
+          return <Badge className="bg-slate-800">Utilizado</Badge>;
+        if (status === 'CANCELLED')
+          return <Badge variant="destructive">Cancelado</Badge>;
         return <Badge className="bg-green-600">Pendente</Badge>;
       },
     },
@@ -77,9 +119,28 @@ export function TicketsPage() {
         if (ticket.status !== 'PENDING') return null;
 
         return (
-          <Button variant="ghost" size="sm" className="text-red-600 hover:text-red-700 hover:bg-red-50" onClick={() => setSelectedTicket(ticket)}>
-            <Ban className="w-4 h-4 mr-2" /> Cancelar
-          </Button>
+          <div className="flex justify-end gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+              onClick={() => simulateScan(ticket.id as any)}
+              disabled={isSimulating}
+            >
+              Simular Scan
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-red-600 hover:text-red-700 hover:bg-red-50"
+              onClick={() => {
+                setSelectedTicket(ticket);
+                setIsCancelOpen(true);
+              }}
+            >
+              <Ban className="w-4 h-4 mr-2" /> Cancelar
+            </Button>
+          </div>
         );
       },
     },
@@ -90,24 +151,36 @@ export function TicketsPage() {
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Tickets</h1>
-          <p className="text-sm text-slate-500">Gestão de bilhetes digitais emitidos.</p>
+          <p className="text-sm text-slate-500">
+            Gestão de bilhetes digitais emitidos.
+          </p>
         </div>
-        <Button>Emitir Ticket</Button>
+        <Button onClick={() => setIsCreateOpen(true)}>Emitir Ticket</Button>
       </div>
 
       {isLoading ? (
         <div>A carregar tickets...</div>
       ) : (
-        <DataTable columns={columns} data={data?.data || []} searchKey="reference" />
+        <DataTable
+          columns={columns}
+          data={(data as any)?.items || (data as any)?.data || []}
+          searchKey="reference"
+        />
       )}
 
-      <ConfirmDialog
-        open={!!selectedTicket}
-        onOpenChange={(open) => !open && setSelectedTicket(null)}
-        title="Cancelar Ticket"
-        description={`Tem a certeza que deseja cancelar o ticket ${selectedTicket?.reference}? Esta ação não pode ser revertida.`}
-        onConfirm={handleCancel}
-        destructive={true}
+      <CancelTicketDialog
+        open={isCancelOpen}
+        onOpenChange={setIsCancelOpen}
+        reference={selectedTicket?.reference || ''}
+        onConfirm={handleCancelConfirm}
+        isLoading={isCanceling}
+      />
+
+      <TicketModal
+        open={isCreateOpen}
+        onOpenChange={setIsCreateOpen}
+        onSubmit={handleCreateSubmit}
+        isLoading={isCreating}
       />
     </div>
   );

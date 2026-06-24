@@ -14,7 +14,7 @@ import { Login } from './app/auth/Login';
 import { Register } from './app/auth/Register';
 
 // Admin pages
-import { DashboardPage } from './app/admin/DashboardPage';
+import { DashboardPage } from './app/admin/dashboard/DashboardPage';
 import { SettingsPage } from './app/admin/SettingsPage';
 import { UsersPage } from './app/admin/iam/UsersPage';
 import { DriversPage } from './app/admin/iam/DriversPage';

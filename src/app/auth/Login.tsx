@@ -47,14 +47,14 @@ export const Login: React.FC = () => {
         {
           id: payload.sub || payload.id || '',
           email: data.email,
-          role: 'client',
+          role: payload.role?.toLowerCase() || 'admin',
           is_active: true,
           created_at: new Date().toISOString(),
           tenant_id: payload.tenant_id,
         },
         undefined
       );
-      navigate('/tenant/dashboard');
+      navigate('/admin/dashboard');
     } catch (err) {
       setServerError(resolveError(err));
     }
@@ -93,9 +93,6 @@ export const Login: React.FC = () => {
       >
         {/* Logo / Brand */}
         <div className="text-center mb-8 flex flex-col items-center">
-          <div className="mb-4 transition-all duration-500">
-            <Logo className="h-14 text-text-primary w-auto" />
-          </div>
           <h1 className="text-2xl font-black text-text-primary tracking-tight mt-2">
             Mob<span className="text-primary">Go</span>
           </h1>
@@ -177,8 +174,13 @@ export const Login: React.FC = () => {
             </button>
 
             <div className="text-center mt-4">
-              <span className="text-sm text-text-secondary">Não tem uma conta? </span>
-              <Link to="/register" className="text-sm font-bold text-primary hover:underline">
+              <span className="text-sm text-text-secondary">
+                Não tem uma conta?{' '}
+              </span>
+              <Link
+                to="/register"
+                className="text-sm font-bold text-primary hover:underline"
+              >
                 Criar Conta
               </Link>
             </div>
@@ -197,26 +199,11 @@ export const Login: React.FC = () => {
 
 function resolveError(err: unknown): string {
   if (axios.isAxiosError(err)) {
-    const status = err.response?.status;
-    if (status === 401) return 'Email ou senha incorrectos.';
-    if (status === 403) return 'Conta desativada. Contacte o suporte.';
-    if (status === 404) return 'Conta não encontrada.';
-    if (!err.response) return 'Sem ligação ao servidor.';
-
-    // O backend usa {"error": "...", "detalhes": [...]} ou {"detail": "..."}
-    const data = err.response.data;
-    if (data?.error) {
-      if (
-        data.detalhes &&
-        Array.isArray(data.detalhes) &&
-        data.detalhes.length > 0
-      ) {
-        return `${data.error} (${data.detalhes[0].campo}: ${data.detalhes[0].mensagem})`;
-      }
-      return data.error;
+    const data = err.response?.data;
+    if (data?.message) {
+      return Array.isArray(data.message) ? data.message[0] : data.message;
     }
-
-    return data?.detail || 'Erro ao autenticar.';
+    return data?.error || data?.detail || 'Erro ao iniciar sessão.';
   }
   return 'Erro inesperado. Tente novamente.';
 }

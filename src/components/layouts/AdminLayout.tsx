@@ -43,7 +43,7 @@ export function AdminLayout() {
         <div className="p-6">
           <Logo className="w-32" />
         </div>
-        
+
         <nav className="flex-1 px-4 space-y-2 overflow-y-auto">
           {sidebarItems.map((item) => {
             const isActive = location.pathname.startsWith(item.href);

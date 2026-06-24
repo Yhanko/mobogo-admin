@@ -13,7 +13,18 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { MoreHorizontal, Ban, CheckCircle, ShieldOff, ShieldAlert, Trash2 } from 'lucide-react';
+import {
+  MoreHorizontal,
+  Ban,
+  CheckCircle,
+  ShieldOff,
+  ShieldAlert,
+  Trash2,
+  Eye,
+} from 'lucide-react';
+import { BlockUserDialog } from './components/BlockUserDialog';
+import { UserDetailsDialog } from './components/UserDetailsDialog';
+import { UserModal } from './components/UserModal';
 
 type User = {
   id: string;
@@ -28,29 +39,80 @@ type User = {
 };
 
 export function UsersPage() {
-  const { data, isLoading } = useApiQuery<{ data: User[], meta: any }>(['users'], '/iam/users');
-  
+  const { data, isLoading } = useApiQuery<{ data: User[]; meta: any }>(
+    ['users'],
+    '/iam/users'
+  );
+
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const [dialogAction, setDialogAction] = useState<'block' | 'unblock' | 'activate' | 'deactivate' | 'delete' | null>(null);
+  const [dialogAction, setDialogAction] = useState<
+    'unblock' | 'activate' | 'deactivate' | 'delete' | null
+  >(null);
+  const [isBlockOpen, setIsBlockOpen] = useState(false);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
 
   // Mutations
-  const { mutate: blockUser } = useApiMutation('patch', (id: string) => `/iam/users/${id}/block`, { invalidateKeys: [['users']], showSuccessToast: true });
-  const { mutate: unblockUser } = useApiMutation('patch', (id: string) => `/iam/users/${id}/unblock`, { invalidateKeys: [['users']], showSuccessToast: true });
-  const { mutate: activateUser } = useApiMutation('patch', (id: string) => `/iam/users/${id}/activate`, { invalidateKeys: [['users']], showSuccessToast: true });
-  const { mutate: deactivateUser } = useApiMutation('patch', (id: string) => `/iam/users/${id}/deactivate`, { invalidateKeys: [['users']], showSuccessToast: true });
-  const { mutate: deleteUser } = useApiMutation('delete', (id: string) => `/iam/users/${id}`, { invalidateKeys: [['users']], showSuccessToast: true });
+  const { mutate: createUser, isPending: isCreating } = useApiMutation(
+    'post',
+    '/iam/users',
+    { invalidateKeys: [['users']], showSuccessToast: true }
+  );
+  const { mutate: blockUser, isPending: isBlocking } = useApiMutation(
+    'patch',
+    (id: string) => `/iam/users/${id}/block`,
+    { invalidateKeys: [['users']], showSuccessToast: true }
+  );
+  const { mutate: unblockUser } = useApiMutation(
+    'patch',
+    (id: string) => `/iam/users/${id}/unblock`,
+    { invalidateKeys: [['users']], showSuccessToast: true }
+  );
+  const { mutate: activateUser } = useApiMutation(
+    'patch',
+    (id: string) => `/iam/users/${id}/activate`,
+    { invalidateKeys: [['users']], showSuccessToast: true }
+  );
+  const { mutate: deactivateUser } = useApiMutation(
+    'patch',
+    (id: string) => `/iam/users/${id}/deactivate`,
+    { invalidateKeys: [['users']], showSuccessToast: true }
+  );
+  const { mutate: deleteUser } = useApiMutation(
+    'delete',
+    (id: string) => `/iam/users/${id}`,
+    { invalidateKeys: [['users']], showSuccessToast: true }
+  );
 
   const handleAction = () => {
     if (!selectedUser || !dialogAction) return;
-    
-    // Na API, block precisa de dto. Vamos enviar um motivo padrão genérico para testar, ou idealmente ter um form.
-    if (dialogAction === 'block') blockUser({ reason: 'Bloqueado pelo Super Admin' } as any, { onSuccess: () => setSelectedUser(null) });
-    if (dialogAction === 'unblock') unblockUser({}, { onSuccess: () => setSelectedUser(null) });
-    if (dialogAction === 'activate') activateUser({}, { onSuccess: () => setSelectedUser(null) });
-    if (dialogAction === 'deactivate') deactivateUser({}, { onSuccess: () => setSelectedUser(null) });
-    if (dialogAction === 'delete') deleteUser({}, { onSuccess: () => setSelectedUser(null) });
-    
+
+    if (dialogAction === 'unblock')
+      unblockUser({}, { onSuccess: () => setSelectedUser(null) });
+    if (dialogAction === 'activate')
+      activateUser({}, { onSuccess: () => setSelectedUser(null) });
+    if (dialogAction === 'deactivate')
+      deactivateUser({}, { onSuccess: () => setSelectedUser(null) });
+    if (dialogAction === 'delete')
+      deleteUser({}, { onSuccess: () => setSelectedUser(null) });
+
     setDialogAction(null);
+  };
+
+  const handleBlockConfirm = (reason: string) => {
+    if (!selectedUser) return;
+    blockUser({ reason } as any, {
+      onSuccess: () => {
+        setIsBlockOpen(false);
+        setSelectedUser(null);
+      },
+    });
+  };
+
+  const handleCreateSubmit = (data: any) => {
+    createUser(data, {
+      onSuccess: () => setIsCreateOpen(false),
+    });
   };
 
   const columns: ColumnDef<User>[] = [
@@ -58,7 +120,9 @@ export function UsersPage() {
       accessorKey: 'name',
       header: 'Nome',
       cell: ({ row }) => (
-        <div className="font-medium">{row.original.name || row.original.displayId || 'N/A'}</div>
+        <div className="font-medium">
+          {row.original.name || row.original.displayId || 'N/A'}
+        </div>
       ),
     },
     {
@@ -105,29 +169,65 @@ export function UsersPage() {
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Ações</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              
+              <DropdownMenuItem
+                onClick={() => {
+                  setSelectedUser(user);
+                  setIsDetailsOpen(true);
+                }}
+              >
+                <Eye className="mr-2 h-4 w-4" /> Ver Detalhes
+              </DropdownMenuItem>
+
               {user.isBlocked ? (
-                <DropdownMenuItem onClick={() => { setSelectedUser(user); setDialogAction('unblock'); }}>
-                  <CheckCircle className="mr-2 h-4 w-4 text-green-600" /> Desbloquear
+                <DropdownMenuItem
+                  onClick={() => {
+                    setSelectedUser(user);
+                    setDialogAction('unblock');
+                  }}
+                >
+                  <CheckCircle className="mr-2 h-4 w-4 text-green-600" />{' '}
+                  Desbloquear
                 </DropdownMenuItem>
               ) : (
-                <DropdownMenuItem onClick={() => { setSelectedUser(user); setDialogAction('block'); }}>
+                <DropdownMenuItem
+                  onClick={() => {
+                    setSelectedUser(user);
+                    setIsBlockOpen(true);
+                  }}
+                >
                   <Ban className="mr-2 h-4 w-4 text-red-600" /> Bloquear
                 </DropdownMenuItem>
               )}
 
               {user.isActive ? (
-                <DropdownMenuItem onClick={() => { setSelectedUser(user); setDialogAction('deactivate'); }}>
-                  <ShieldAlert className="mr-2 h-4 w-4 text-orange-600" /> Desativar
+                <DropdownMenuItem
+                  onClick={() => {
+                    setSelectedUser(user);
+                    setDialogAction('deactivate');
+                  }}
+                >
+                  <ShieldAlert className="mr-2 h-4 w-4 text-orange-600" />{' '}
+                  Desativar
                 </DropdownMenuItem>
               ) : (
-                <DropdownMenuItem onClick={() => { setSelectedUser(user); setDialogAction('activate'); }}>
+                <DropdownMenuItem
+                  onClick={() => {
+                    setSelectedUser(user);
+                    setDialogAction('activate');
+                  }}
+                >
                   <ShieldOff className="mr-2 h-4 w-4 text-green-600" /> Ativar
                 </DropdownMenuItem>
               )}
-              
+
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="text-red-600" onClick={() => { setSelectedUser(user); setDialogAction('delete'); }}>
+              <DropdownMenuItem
+                className="text-red-600"
+                onClick={() => {
+                  setSelectedUser(user);
+                  setDialogAction('delete');
+                }}
+              >
                 <Trash2 className="mr-2 h-4 w-4" /> Eliminar
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -139,12 +239,32 @@ export function UsersPage() {
 
   const getDialogContent = () => {
     switch (dialogAction) {
-      case 'block': return { title: 'Bloquear Utilizador', desc: `Tem a certeza que deseja bloquear ${selectedUser?.name}?`, dest: true };
-      case 'unblock': return { title: 'Desbloquear Utilizador', desc: `Deseja remover o bloqueio de ${selectedUser?.name}?`, dest: false };
-      case 'activate': return { title: 'Ativar Utilizador', desc: `Deseja ativar a conta de ${selectedUser?.name}?`, dest: false };
-      case 'deactivate': return { title: 'Desativar Utilizador', desc: `Deseja desativar temporariamente ${selectedUser?.name}?`, dest: true };
-      case 'delete': return { title: 'Eliminar Utilizador', desc: `Atenção! Esta ação eliminará ${selectedUser?.name} do sistema.`, dest: true };
-      default: return { title: '', desc: '', dest: false };
+      case 'unblock':
+        return {
+          title: 'Desbloquear Utilizador',
+          desc: `Deseja remover o bloqueio de ${selectedUser?.name}?`,
+          dest: false,
+        };
+      case 'activate':
+        return {
+          title: 'Ativar Utilizador',
+          desc: `Deseja ativar a conta de ${selectedUser?.name}?`,
+          dest: false,
+        };
+      case 'deactivate':
+        return {
+          title: 'Desativar Utilizador',
+          desc: `Deseja desativar temporariamente ${selectedUser?.name}?`,
+          dest: true,
+        };
+      case 'delete':
+        return {
+          title: 'Eliminar Utilizador',
+          desc: `Atenção! Esta ação eliminará ${selectedUser?.name} do sistema.`,
+          dest: true,
+        };
+      default:
+        return { title: '', desc: '', dest: false };
     }
   };
 
@@ -155,15 +275,21 @@ export function UsersPage() {
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Utilizadores</h1>
-          <p className="text-sm text-slate-500">Faça a gestão dos utilizadores registados na plataforma.</p>
+          <p className="text-sm text-slate-500">
+            Faça a gestão dos utilizadores registados na plataforma.
+          </p>
         </div>
-        <Button>Novo Utilizador</Button>
+        <Button onClick={() => setIsCreateOpen(true)}>Novo Utilizador</Button>
       </div>
 
       {isLoading ? (
         <div>A carregar dados...</div>
       ) : (
-        <DataTable columns={columns} data={data?.data || []} searchKey="name" />
+        <DataTable
+          columns={columns}
+          data={(data as any)?.items || (data as any)?.data || []}
+          searchKey="name"
+        />
       )}
 
       <ConfirmDialog
@@ -173,6 +299,27 @@ export function UsersPage() {
         description={desc}
         onConfirm={handleAction}
         destructive={dest}
+      />
+
+      <BlockUserDialog
+        open={isBlockOpen}
+        onOpenChange={setIsBlockOpen}
+        userName={selectedUser?.name || selectedUser?.displayId || 'Utilizador'}
+        onConfirm={handleBlockConfirm}
+        isLoading={isBlocking}
+      />
+
+      <UserDetailsDialog
+        open={isDetailsOpen}
+        onOpenChange={setIsDetailsOpen}
+        userId={selectedUser?.id || null}
+      />
+
+      <UserModal
+        open={isCreateOpen}
+        onOpenChange={setIsCreateOpen}
+        onSubmit={handleCreateSubmit}
+        isLoading={isCreating}
       />
     </div>
   );

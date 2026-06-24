@@ -13,7 +13,16 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { MoreHorizontal, Ban, ShieldOff, ShieldAlert, CheckCircle } from 'lucide-react';
+import {
+  MoreHorizontal,
+  Ban,
+  ShieldOff,
+  ShieldAlert,
+  CheckCircle,
+  Eye,
+} from 'lucide-react';
+import { DriverModal } from './components/DriverModal';
+import { DriverDetailsDialog } from './components/DriverDetailsDialog';
 
 type Driver = {
   id: string;
@@ -29,23 +38,56 @@ type Driver = {
 };
 
 export function DriversPage() {
-  const { data, isLoading } = useApiQuery<{ data: Driver[], meta: any }>(['drivers'], '/iam/drivers');
-  
-  const [selectedDriver, setSelectedDriver] = useState<Driver | null>(null);
-  const [dialogAction, setDialogAction] = useState<'block' | 'activate' | 'deactivate' | null>(null);
+  const { data, isLoading } = useApiQuery<{ data: Driver[]; meta: any }>(
+    ['drivers'],
+    '/iam/drivers'
+  );
 
-  const { mutate: blockDriver } = useApiMutation('patch', (id: string) => `/iam/drivers/${id}/block`, { invalidateKeys: [['drivers']], showSuccessToast: true });
-  const { mutate: activateDriver } = useApiMutation('patch', (id: string) => `/iam/drivers/${id}/activate`, { invalidateKeys: [['drivers']], showSuccessToast: true });
-  const { mutate: deactivateDriver } = useApiMutation('patch', (id: string) => `/iam/drivers/${id}/deactivate`, { invalidateKeys: [['drivers']], showSuccessToast: true });
+  const [selectedDriver, setSelectedDriver] = useState<Driver | null>(null);
+  const [dialogAction, setDialogAction] = useState<
+    'block' | 'activate' | 'deactivate' | null
+  >(null);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+
+  const { mutate: createDriver, isPending: isCreating } = useApiMutation(
+    'post',
+    '/iam/drivers',
+    { invalidateKeys: [['drivers']], showSuccessToast: true }
+  );
+  const { mutate: blockDriver } = useApiMutation(
+    'patch',
+    (id: string) => `/iam/drivers/${id}/block`,
+    { invalidateKeys: [['drivers']], showSuccessToast: true }
+  );
+  const { mutate: activateDriver } = useApiMutation(
+    'patch',
+    (id: string) => `/iam/drivers/${id}/activate`,
+    { invalidateKeys: [['drivers']], showSuccessToast: true }
+  );
+  const { mutate: deactivateDriver } = useApiMutation(
+    'patch',
+    (id: string) => `/iam/drivers/${id}/deactivate`,
+    { invalidateKeys: [['drivers']], showSuccessToast: true }
+  );
 
   const handleAction = () => {
     if (!selectedDriver || !dialogAction) return;
-    
-    if (dialogAction === 'block') blockDriver({}, { onSuccess: () => setSelectedDriver(null) });
-    if (dialogAction === 'activate') activateDriver({}, { onSuccess: () => setSelectedDriver(null) });
-    if (dialogAction === 'deactivate') deactivateDriver({}, { onSuccess: () => setSelectedDriver(null) });
-    
+
+    if (dialogAction === 'block')
+      blockDriver({}, { onSuccess: () => setSelectedDriver(null) });
+    if (dialogAction === 'activate')
+      activateDriver({}, { onSuccess: () => setSelectedDriver(null) });
+    if (dialogAction === 'deactivate')
+      deactivateDriver({}, { onSuccess: () => setSelectedDriver(null) });
+
     setDialogAction(null);
+  };
+
+  const handleCreateSubmit = (data: any) => {
+    createDriver(data, {
+      onSuccess: () => setIsCreateOpen(false),
+    });
   };
 
   const columns: ColumnDef<Driver>[] = [
@@ -68,16 +110,21 @@ export function DriversPage() {
     {
       accessorKey: 'licensePlate',
       header: 'Matrícula',
-      cell: ({ row }) => <span className="font-mono">{row.getValue('licensePlate')}</span>,
+      cell: ({ row }) => (
+        <span className="font-mono">{row.getValue('licensePlate')}</span>
+      ),
     },
     {
       accessorKey: 'status',
       header: 'Estado',
       cell: ({ row }) => {
         const status = row.getValue('status') as string;
-        if (status === 'BLOCKED') return <Badge variant="destructive">Bloqueado</Badge>;
-        if (status === 'INACTIVE') return <Badge variant="secondary">Inativo</Badge>;
-        if (status === 'PENDING') return <Badge className="bg-yellow-600">Pendente</Badge>;
+        if (status === 'BLOCKED')
+          return <Badge variant="destructive">Bloqueado</Badge>;
+        if (status === 'INACTIVE')
+          return <Badge variant="secondary">Inativo</Badge>;
+        if (status === 'PENDING')
+          return <Badge className="bg-yellow-600">Pendente</Badge>;
         return <Badge className="bg-green-600">Ativo</Badge>;
       },
     },
@@ -98,19 +145,43 @@ export function DriversPage() {
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Ações</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              
+              <DropdownMenuItem
+                onClick={() => {
+                  setSelectedDriver(driver);
+                  setIsDetailsOpen(true);
+                }}
+              >
+                <Eye className="mr-2 h-4 w-4" /> Ver Detalhes
+              </DropdownMenuItem>
+
               {status !== 'BLOCKED' && (
-                <DropdownMenuItem onClick={() => { setSelectedDriver(driver); setDialogAction('block'); }}>
+                <DropdownMenuItem
+                  onClick={() => {
+                    setSelectedDriver(driver);
+                    setDialogAction('block');
+                  }}
+                >
                   <Ban className="mr-2 h-4 w-4 text-red-600" /> Bloquear
                 </DropdownMenuItem>
               )}
 
               {status === 'ACTIVE' ? (
-                <DropdownMenuItem onClick={() => { setSelectedDriver(driver); setDialogAction('deactivate'); }}>
-                  <ShieldAlert className="mr-2 h-4 w-4 text-orange-600" /> Desativar
+                <DropdownMenuItem
+                  onClick={() => {
+                    setSelectedDriver(driver);
+                    setDialogAction('deactivate');
+                  }}
+                >
+                  <ShieldAlert className="mr-2 h-4 w-4 text-orange-600" />{' '}
+                  Desativar
                 </DropdownMenuItem>
               ) : (
-                <DropdownMenuItem onClick={() => { setSelectedDriver(driver); setDialogAction('activate'); }}>
+                <DropdownMenuItem
+                  onClick={() => {
+                    setSelectedDriver(driver);
+                    setDialogAction('activate');
+                  }}
+                >
                   <CheckCircle className="mr-2 h-4 w-4 text-green-600" /> Ativar
                 </DropdownMenuItem>
               )}
@@ -123,10 +194,26 @@ export function DriversPage() {
 
   const getDialogContent = () => {
     switch (dialogAction) {
-      case 'block': return { title: 'Bloquear Motorista', desc: `Tem a certeza que deseja bloquear o motorista ${selectedDriver?.user?.name}?`, dest: true };
-      case 'activate': return { title: 'Ativar Motorista', desc: `Deseja ativar a conta do motorista ${selectedDriver?.user?.name}?`, dest: false };
-      case 'deactivate': return { title: 'Desativar Motorista', desc: `Deseja desativar temporariamente o motorista ${selectedDriver?.user?.name}?`, dest: true };
-      default: return { title: '', desc: '', dest: false };
+      case 'block':
+        return {
+          title: 'Bloquear Motorista',
+          desc: `Tem a certeza que deseja bloquear o motorista ${selectedDriver?.user?.name}?`,
+          dest: true,
+        };
+      case 'activate':
+        return {
+          title: 'Ativar Motorista',
+          desc: `Deseja ativar a conta do motorista ${selectedDriver?.user?.name}?`,
+          dest: false,
+        };
+      case 'deactivate':
+        return {
+          title: 'Desativar Motorista',
+          desc: `Deseja desativar temporariamente o motorista ${selectedDriver?.user?.name}?`,
+          dest: true,
+        };
+      default:
+        return { title: '', desc: '', dest: false };
     }
   };
 
@@ -137,15 +224,21 @@ export function DriversPage() {
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Motoristas</h1>
-          <p className="text-sm text-slate-500">Gestão de motoristas e veículos registados na plataforma.</p>
+          <p className="text-sm text-slate-500">
+            Gestão de motoristas e veículos registados na plataforma.
+          </p>
         </div>
-        <Button>Novo Motorista</Button>
+        <Button onClick={() => setIsCreateOpen(true)}>Novo Motorista</Button>
       </div>
 
       {isLoading ? (
         <div>A carregar dados...</div>
       ) : (
-        <DataTable columns={columns} data={data?.data || []} searchKey="licensePlate" />
+        <DataTable
+          columns={columns}
+          data={(data as any)?.items || (data as any)?.data || []}
+          searchKey="licensePlate"
+        />
       )}
 
       <ConfirmDialog
@@ -155,6 +248,19 @@ export function DriversPage() {
         description={desc}
         onConfirm={handleAction}
         destructive={dest}
+      />
+
+      <DriverDetailsDialog
+        open={isDetailsOpen}
+        onOpenChange={setIsDetailsOpen}
+        driverId={selectedDriver?.id || null}
+      />
+
+      <DriverModal
+        open={isCreateOpen}
+        onOpenChange={setIsCreateOpen}
+        onSubmit={handleCreateSubmit}
+        isLoading={isCreating}
       />
     </div>
   );

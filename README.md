@@ -42,6 +42,7 @@ A arquitetura do projeto baseia-se numa forte **Separação de Preocupações (S
 - **Componentes de UI Modulares:** Através do padrão introduzido pelo _Shadcn UI_, os componentes de baixo nível são totalmente independentes e altamente personalizáveis.
 
 **Vantagens:**
+
 - **Escalabilidade:** Novas páginas e funcionalidades podem ser adicionadas sem impacto em módulos existentes.
 - **Manutenção Simplificada:** A localização de bugs torna-se previsível.
 - **Experiência de Utilizador (UX):** Graças à arquitetura reativa com React Query e Zustand, a plataforma fornece _feedback_ em tempo real (como o _polling_ de resposta da AGT) sem bloquear a interface.
@@ -51,27 +52,34 @@ A arquitetura do projeto baseia-se numa forte **Separação de Preocupações (S
 Siga os passos abaixo para configurar e rodar o projeto na sua máquina local:
 
 ### 1. Clonar o repositório
+
 ```bash
 git clone <url-do-repositorio>
 cd cipherpah-frontend
 ```
 
 ### 2. Instalar as dependências
+
 ```bash
 npm install
 ```
 
 ### 3. Configurar as Variáveis de Ambiente
+
 Crie um ficheiro `.env` na raiz do projeto e defina a URL da API do Backend:
+
 ```env
 VITE_API_URL=http://localhost:3000/api
 ```
-*(Altere o valor para a URL correspondente ao seu ambiente de desenvolvimento backend).*
+
+_(Altere o valor para a URL correspondente ao seu ambiente de desenvolvimento backend)._
 
 ### 4. Rodar o Projeto
+
 ```bash
 npm run dev
 ```
+
 O projeto estará disponível no endereço indicado no terminal (por norma, `http://localhost:5173`).
 
 ## ✍️ Autor

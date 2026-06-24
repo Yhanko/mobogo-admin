@@ -21,14 +21,19 @@ type ActiveDriver = {
 };
 
 export function LocationPage() {
-  const { data, isLoading } = useApiQuery<ActiveDriver[]>(['location-drivers'], '/location/drivers/active');
+  const { data, isLoading } = useApiQuery<ActiveDriver[]>(
+    ['location-drivers'],
+    '/location/drivers/active'
+  );
 
   const columns: ColumnDef<ActiveDriver>[] = [
     {
       accessorKey: 'driver',
       header: 'Motorista',
       cell: ({ row }) => {
-        const name = row.original.driver?.user?.name || `Driver ID: ${row.original.driverId.substring(0, 8)}`;
+        const name =
+          row.original.driver?.user?.name ||
+          `Driver ID: ${row.original.driverId.substring(0, 8)}`;
         const phone = row.original.driver?.user?.phone || '';
         return (
           <div>
@@ -41,14 +46,19 @@ export function LocationPage() {
     {
       accessorKey: 'licensePlate',
       header: 'Matrícula',
-      cell: ({ row }) => <span className="font-mono">{row.original.driver?.licensePlate || 'N/A'}</span>,
+      cell: ({ row }) => (
+        <span className="font-mono">
+          {row.original.driver?.licensePlate || 'N/A'}
+        </span>
+      ),
     },
     {
       accessorKey: 'status',
       header: 'Estado',
       cell: ({ row }) => {
         const status = row.original.status;
-        if (status === 'IN_RIDE') return <Badge className="bg-blue-600">Em Viagem</Badge>;
+        if (status === 'IN_RIDE')
+          return <Badge className="bg-blue-600">Em Viagem</Badge>;
         return <Badge className="bg-green-600">Online Livre</Badge>;
       },
     },
@@ -58,7 +68,9 @@ export function LocationPage() {
       cell: ({ row }) => (
         <div className="flex items-center gap-2 text-sm text-slate-600">
           <MapPin className="w-4 h-4" />
-          <span>{row.original.lat.toFixed(4)}, {row.original.lng.toFixed(4)}</span>
+          <span>
+            {row.original.lat.toFixed(4)}, {row.original.lng.toFixed(4)}
+          </span>
         </div>
       ),
     },
@@ -67,7 +79,9 @@ export function LocationPage() {
       header: 'Última Atualização',
       cell: ({ row }) => (
         <span className="text-sm">
-          {row.original.lastUpdatedAt ? format(new Date(row.original.lastUpdatedAt), 'HH:mm:ss') : 'N/A'}
+          {row.original.lastUpdatedAt
+            ? format(new Date(row.original.lastUpdatedAt), 'HH:mm:ss')
+            : 'N/A'}
         </span>
       ),
     },
@@ -77,8 +91,12 @@ export function LocationPage() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Monitorização de Frota</h1>
-          <p className="text-sm text-slate-500">Visualização em tempo real dos motoristas ativos.</p>
+          <h1 className="text-2xl font-bold tracking-tight">
+            Monitorização de Frota
+          </h1>
+          <p className="text-sm text-slate-500">
+            Visualização em tempo real dos motoristas ativos.
+          </p>
         </div>
       </div>
 

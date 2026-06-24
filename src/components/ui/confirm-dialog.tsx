@@ -7,17 +7,17 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "./alert-dialog"
+} from './alert-dialog';
 
 interface ConfirmDialogProps {
-  open: boolean
-  onOpenChange: (open: boolean) => void
-  title: string
-  description: string
-  onConfirm: () => void
-  confirmText?: string
-  cancelText?: string
-  destructive?: boolean
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  title: string;
+  description: string;
+  onConfirm: () => void;
+  confirmText?: string;
+  cancelText?: string;
+  destructive?: boolean;
 }
 
 export function ConfirmDialog({
@@ -26,8 +26,8 @@ export function ConfirmDialog({
   title,
   description,
   onConfirm,
-  confirmText = "Confirmar",
-  cancelText = "Cancelar",
+  confirmText = 'Confirmar',
+  cancelText = 'Cancelar',
   destructive = false,
 }: ConfirmDialogProps) {
   return (
@@ -41,16 +41,18 @@ export function ConfirmDialog({
           <AlertDialogCancel>{cancelText}</AlertDialogCancel>
           <AlertDialogAction
             onClick={(e) => {
-              e.preventDefault()
-              onConfirm()
-              onOpenChange(false)
+              e.preventDefault();
+              onConfirm();
+              onOpenChange(false);
             }}
-            className={destructive ? "bg-red-600 hover:bg-red-700 text-white" : ""}
+            className={
+              destructive ? 'bg-red-600 hover:bg-red-700 text-white' : ''
+            }
           >
             {confirmText}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  )
+  );
 }

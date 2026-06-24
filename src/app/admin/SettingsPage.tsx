@@ -11,14 +11,20 @@ export function SettingsPage() {
   return (
     <div className="max-w-4xl space-y-8">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">Definições da Conta</h1>
-        <p className="text-sm text-slate-500">Faça a gestão do seu perfil de Super Administrador e preferências.</p>
+        <h1 className="text-2xl font-bold tracking-tight">
+          Definições da Conta
+        </h1>
+        <p className="text-sm text-slate-500">
+          Faça a gestão do seu perfil de Super Administrador e preferências.
+        </p>
       </div>
 
       <div className="bg-white dark:bg-slate-950 p-8 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-8">
         <div className="flex items-center gap-6">
           <Avatar className="w-24 h-24">
-            <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${user?.name || 'Admin'}`} />
+            <AvatarImage
+              src={`https://api.dicebear.com/7.x/initials/svg?seed=${user?.name || 'Admin'}`}
+            />
             <AvatarFallback>AD</AvatarFallback>
           </Avatar>
           <div>
@@ -26,7 +32,9 @@ export function SettingsPage() {
             <p className="text-slate-500">{user?.role}</p>
             <div className="mt-4 flex gap-3">
               <Button size="sm">Alterar Foto</Button>
-              <Button size="sm" variant="outline">Remover Foto</Button>
+              <Button size="sm" variant="outline">
+                Remover Foto
+              </Button>
             </div>
           </div>
         </div>
@@ -46,7 +54,11 @@ export function SettingsPage() {
           </div>
           <div className="space-y-2">
             <label className="text-sm font-medium">ID de Exibição</label>
-            <Input defaultValue={user?.displayId || ''} disabled className="bg-slate-50" />
+            <Input
+              defaultValue={user?.displayId || ''}
+              disabled
+              className="bg-slate-50"
+            />
           </div>
         </div>
 
@@ -59,16 +71,20 @@ export function SettingsPage() {
       <div className="bg-white dark:bg-slate-950 p-8 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-6">
         <div>
           <h2 className="text-lg font-bold">Segurança</h2>
-          <p className="text-sm text-slate-500">Altere a sua palavra-passe e defina medidas de segurança adicionais.</p>
+          <p className="text-sm text-slate-500">
+            Altere a sua palavra-passe e defina medidas de segurança adicionais.
+          </p>
         </div>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
             <label className="text-sm font-medium">Nova Palavra-passe</label>
             <Input type="password" />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium">Confirmar Palavra-passe</label>
+            <label className="text-sm font-medium">
+              Confirmar Palavra-passe
+            </label>
             <Input type="password" />
           </div>
         </div>

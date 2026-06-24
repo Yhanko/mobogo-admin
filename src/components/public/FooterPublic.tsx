@@ -193,8 +193,8 @@ export const FooterPublic = () => {
         {/* Copyright */}
         <div className="pt-8 border-t border-border-subtle flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-xs text-text-secondary">
-            &copy; {new Date().getFullYear()} MobGo Angola. Todos os
-            direitos reservados.
+            &copy; {new Date().getFullYear()} MobGo Angola. Todos os direitos
+            reservados.
           </p>
         </div>
       </div>
