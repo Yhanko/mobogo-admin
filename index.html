@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="pt-pt">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>moboGo admin</title>
+    <!-- Políticas de Segurança (CSP, Anti-Clickjacking, etc) -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' http://localhost:* ws://localhost:* https://*; img-src 'self' data:;"
+    />
+    <meta http-equiv="X-Frame-Options" content="DENY" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta
+      name="description"
+      content="Middleware corporativo para faturação eletrónica em conformidade com a AGT Angola. Gerencie faturas, séries fiscais e chaves digitais de forma segura."
+    />
+    <meta name="author" content="Romeu Cajamba — G-CTech" />
+
+    <meta property="og:title" content="Cipherpath Fiscal Engine" />
+    <meta
+      property="og:description"
+      content="Motor de Faturação Eletrónica — Seguro, Assíncrono e Conforme com a AGT."
+    />
+    <meta property="og:type" content="website" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
