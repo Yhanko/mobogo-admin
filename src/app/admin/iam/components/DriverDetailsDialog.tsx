@@ -86,7 +86,7 @@ export function DriverDetailsDialog({
                   ) : driver.status === 'INACTIVE' ? (
                     <Badge variant="secondary">Inativo</Badge>
                   ) : driver.status === 'PENDING' ? (
-                    <Badge className="bg-yellow-600">Pendente</Badge>
+                    <Badge className="bg-blue-600">Pendente</Badge>
                   ) : (
                     <Badge className="bg-green-600">Ativo</Badge>
                   )}

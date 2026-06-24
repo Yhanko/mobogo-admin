@@ -16,8 +16,8 @@
     --card-foreground: #0f172a;
     --popover: #f8fafc;
     --popover-foreground: #0f172a;
-    --primary: #fdb913;
-    --primary-foreground: #412d00;
+    --primary: #2563eb;
+    --primary-foreground: #ffffff;
     --secondary: #64748b;
     --secondary-foreground: #f8fafc;
     --muted: #e2e8f0;
@@ -28,7 +28,7 @@
     --destructive-foreground: #b91c1c;
     --border: #cbd5e1;
     --input: #f8fafc;
-    --ring: #fdb913;
+    --ring: #2563eb;
     --radius: 0.25rem;
 
     /* Custom Semantic Colors */
@@ -41,7 +41,7 @@
     --danger-text: #b91c1c;
     --success-bg: #d1fae5;
     --success-text: #047857;
-    --primary-hover: #e5a611;
+    --primary-hover: #1d4ed8;
   }
 
   .dark {
@@ -52,8 +52,8 @@
     --card-foreground: #e5e2e1;
     --popover: #1a1a1a;
     --popover-foreground: #e5e2e1;
-    --primary: #fdb913;
-    --primary-foreground: #412d00;
+    --primary: #3b82f6;
+    --primary-foreground: #ffffff;
     --secondary: #c5c7c8;
     --secondary-foreground: #2e3132;
     --muted: #2a2a2a;
@@ -64,7 +64,7 @@
     --destructive-foreground: #690005;
     --border: #414042;
     --input: #0d0d0d;
-    --ring: #fdb913;
+    --ring: #3b82f6;
 
     /* Custom Semantic Colors */
     --surface-elevated: #1a1a1a;
@@ -76,7 +76,7 @@
     --danger-text: #ffb4ab;
     --success-bg: #2d6a4f;
     --success-text: #e5e2e1;
-    --primary-hover: #ffc629;
+    --primary-hover: #60a5fa;
   }
 }
 

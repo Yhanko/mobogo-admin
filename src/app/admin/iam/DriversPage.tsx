@@ -125,7 +125,7 @@ export function DriversPage() {
         if (status === 'INACTIVE')
           return <Badge variant="secondary">Inativo</Badge>;
         if (status === 'PENDING')
-          return <Badge className="bg-yellow-600">Pendente</Badge>;
+          return <Badge className="bg-blue-600">Pendente</Badge>;
         return <Badge className="bg-green-600">Ativo</Badge>;
       },
     },
