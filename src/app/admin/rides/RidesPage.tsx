@@ -93,7 +93,7 @@ export function RidesPage() {
         const status = row.getValue('status') as string;
         if (status === 'CANCELLED')
           return <Badge variant="destructive">Cancelada</Badge>;
-        if (status === 'COMPLETED')
+        if (status === 'USED')
           return <Badge className="bg-green-600">Concluída</Badge>;
         return <Badge className="bg-blue-600">Em curso</Badge>;
       },
