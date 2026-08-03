@@ -11,6 +11,10 @@ export default defineConfig(({ mode }) => ({
     hmr: {
       overlay: false,
     },
+    allowedHosts: true,
+  },
+  preview: {
+    allowedHosts: ['mobgo-admin.onrender.com'],
   },
   plugins: [react(), mode === 'development' && componentTagger()].filter(
     Boolean
