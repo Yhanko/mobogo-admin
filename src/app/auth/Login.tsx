@@ -15,7 +15,7 @@ import {
   EyeOff,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Logo } from '@/components/ui/Logo';
+import { Logo } from '@/components/ui/logo';
 import { useAuthStore } from '@/hooks/auth';
 import { tenantLogin } from '@/service/tenant.service';
 import axios from 'axios';

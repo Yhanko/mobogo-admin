@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { cn } from '../../lib/utils';
-import { Logo } from '../ui/Logo';
-import { ThemeToggle } from '../ui/ThemeToggle';
+import { Logo } from '../ui/logo';
+import { ThemeToggle } from '../ui/theme-toggle';
 import {
   LayoutDashboard,
   Users,
@@ -16,7 +16,7 @@ import {
   ChevronLeft,
   ChevronRight,
 } from 'lucide-react';
-import { Button } from '../ui/Button';
+import { Button } from '../ui/button';
 
 const sidebarItems = [
   { icon: LayoutDashboard, label: 'Dashboard', href: '/admin/dashboard' },

@@ -6,7 +6,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { useApiQuery } from '@/hooks/useApi';
-import { Badge } from '@/components/ui/Badge';
+import { Badge } from '@/components/ui/badge';
 import { Loader2 } from 'lucide-react';
 
 interface UserDetailsDialogProps {

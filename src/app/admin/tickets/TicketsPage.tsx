@@ -3,13 +3,13 @@ import { ColumnDef } from '@tanstack/react-table';
 import { useApiQuery, useApiMutation } from '@/hooks/useApi';
 import { DataTable } from '@/components/ui/data-table';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/Badge';
+import { Badge } from '@/components/ui/badge';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { format } from 'date-fns';
 import { Ban } from 'lucide-react';
 import { TicketModal } from './components/TicketModal';
 import { CancelTicketDialog } from './components/CancelTicketDialog';
-import { TableSkeleton } from '@/components/ui/TableSkeleton';
+import { TableSkeleton } from '@/components/ui/table-skeleton';
 
 type Ticket = {
   id: string;

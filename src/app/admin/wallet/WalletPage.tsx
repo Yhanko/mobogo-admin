@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { ColumnDef } from '@tanstack/react-table';
 import { useApiQuery, useApiMutation } from '@/hooks/useApi';
 import { DataTable } from '@/components/ui/data-table';
-import { Badge } from '@/components/ui/Badge';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { format } from 'date-fns';
@@ -16,7 +16,7 @@ import {
 import { TopupWithdrawModal } from './components/TopupWithdrawModal';
 import { GlobalTopupModal } from './components/GlobalTopupModal';
 import { ViewBalanceModal } from './components/ViewBalanceModal';
-import { TableSkeleton } from '@/components/ui/TableSkeleton';
+import { TableSkeleton } from '@/components/ui/table-skeleton';
 
 type Transaction = {
   id: string;

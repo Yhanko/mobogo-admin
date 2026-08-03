@@ -1,7 +1,7 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { useApiQuery } from '@/hooks/useApi';
 import { DataTable } from '@/components/ui/data-table';
-import { Badge } from '@/components/ui/Badge';
+import { Badge } from '@/components/ui/badge';
 import { MapPin } from 'lucide-react';
 import { format } from 'date-fns';
 

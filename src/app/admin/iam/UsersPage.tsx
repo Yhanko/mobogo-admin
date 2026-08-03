@@ -3,7 +3,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { useApiQuery, useApiMutation } from '@/hooks/useApi';
 import { DataTable } from '@/components/ui/data-table';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/Badge';
+import { Badge } from '@/components/ui/badge';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import {
   DropdownMenu,
@@ -27,7 +27,7 @@ import { BlockUserDialog } from './components/BlockUserDialog';
 import { UserDetailsDialog } from './components/UserDetailsDialog';
 import { UserModal } from './components/UserModal';
 import { ViewBalanceModal } from '../wallet/components/ViewBalanceModal';
-import { TableSkeleton } from '@/components/ui/TableSkeleton';
+import { TableSkeleton } from '@/components/ui/table-skeleton';
 
 type User = {
   id: string;

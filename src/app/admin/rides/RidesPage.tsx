@@ -1,8 +1,8 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { useApiQuery } from '@/hooks/useApi';
 import { DataTable } from '@/components/ui/data-table';
-import { Badge } from '@/components/ui/Badge';
-import { TableSkeleton } from '@/components/ui/TableSkeleton';
+import { Badge } from '@/components/ui/badge';
+import { TableSkeleton } from '@/components/ui/table-skeleton';
 import { format } from 'date-fns';
 
 type Ride = {
