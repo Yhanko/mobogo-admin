@@ -93,9 +93,6 @@ export const Login: React.FC = () => {
       >
         {/* Logo / Brand */}
         <div className="text-center mb-8 flex flex-col items-center">
-          <h1 className="text-2xl font-black text-text-primary tracking-tight mt-2">
-            Mob<span className="text-primary">Go</span>
-          </h1>
           <p className="text-text-secondary text-sm mt-1 font-medium font-mono">
             Plataforma de Mobilidade Urbana
           </p>

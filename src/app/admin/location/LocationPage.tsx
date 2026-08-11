@@ -7,15 +7,19 @@ import { format } from 'date-fns';
 
 type ActiveDriver = {
   driverId: string;
+  driverName?: string;
+  plate?: string;
+  phone?: string | null;
   lat: number;
   lng: number;
-  status: string; // 'ONLINE', 'IN_RIDE', etc.
-  lastUpdatedAt: string;
+  status?: string; // 'ONLINE', 'IN_RIDE', etc.
+  updatedAt?: string;
+  lastUpdatedAt?: string;
   driver?: {
-    licensePlate: string;
-    user: {
-      name: string;
-      phone: string;
+    licensePlate?: string;
+    user?: {
+      name?: string;
+      phone?: string | null;
     };
   };
 };
@@ -32,9 +36,11 @@ export function LocationPage() {
       header: 'Motorista',
       cell: ({ row }) => {
         const name =
+          row.original.driverName ||
           row.original.driver?.user?.name ||
           `Driver ID: ${row.original.driverId.substring(0, 8)}`;
-        const phone = row.original.driver?.user?.phone || '';
+        const phone =
+          row.original.phone || row.original.driver?.user?.phone || '';
         return (
           <div>
             <div className="font-medium">{name}</div>
@@ -46,11 +52,11 @@ export function LocationPage() {
     {
       accessorKey: 'licensePlate',
       header: 'Matrícula',
-      cell: ({ row }) => (
-        <span className="font-mono">
-          {row.original.driver?.licensePlate || 'N/A'}
-        </span>
-      ),
+      cell: ({ row }) => {
+        const plate =
+          row.original.plate || row.original.driver?.licensePlate || 'N/A';
+        return <span className="font-mono">{plate}</span>;
+      },
     },
     {
       accessorKey: 'status',
@@ -69,7 +75,13 @@ export function LocationPage() {
         <div className="flex items-center gap-2 text-sm text-slate-600">
           <MapPin className="w-4 h-4" />
           <span>
-            {row.original.lat.toFixed(4)}, {row.original.lng.toFixed(4)}
+            {typeof row.original.lat === 'number'
+              ? row.original.lat.toFixed(4)
+              : '0.0000'}
+            ,{' '}
+            {typeof row.original.lng === 'number'
+              ? row.original.lng.toFixed(4)
+              : '0.0000'}
           </span>
         </div>
       ),
@@ -77,13 +89,15 @@ export function LocationPage() {
     {
       accessorKey: 'lastUpdatedAt',
       header: 'Última Atualização',
-      cell: ({ row }) => (
-        <span className="text-sm">
-          {row.original.lastUpdatedAt
-            ? format(new Date(row.original.lastUpdatedAt), 'HH:mm:ss')
-            : 'N/A'}
-        </span>
-      ),
+      cell: ({ row }) => {
+        const timestamp =
+          row.original.lastUpdatedAt || row.original.updatedAt;
+        return (
+          <span className="text-sm">
+            {timestamp ? format(new Date(timestamp), 'HH:mm:ss') : 'N/A'}
+          </span>
+        );
+      },
     },
   ];
 

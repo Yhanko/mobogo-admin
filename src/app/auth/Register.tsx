@@ -92,9 +92,6 @@ export const Register: React.FC = () => {
           <div className="mb-4 transition-all duration-500">
             <Logo className="h-14 text-text-primary w-auto" />
           </div>
-          <h1 className="text-2xl font-black text-text-primary tracking-tight mt-2">
-            Mob<span className="text-primary">Go</span>
-          </h1>
           <p className="text-text-secondary text-sm mt-1 font-medium font-mono">
             Plataforma de Mobilidade Urbana
           </p>
