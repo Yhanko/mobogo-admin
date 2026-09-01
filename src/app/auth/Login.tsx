@@ -76,15 +76,6 @@ export const Login: React.FC = () => {
         />
       </div>
 
-      {/* Back Button */}
-      <Link
-        to="/"
-        className="absolute top-6 left-6 flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-text-secondary hover:text-primary hover:bg-surface-elevated/50 border border-transparent hover:border-border-subtle transition-all z-10"
-      >
-        <ArrowLeft className="w-4 h-4" />
-        Página Inicial
-      </Link>
-
       <motion.div
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
