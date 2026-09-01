@@ -38,7 +38,7 @@ Este projeto foi construído com as melhores e mais modernas práticas do ecossi
 
 ## 📁 Arquitetura e Organização de Pastas
 
-A arquitetura do frontend baseia-se numa separação lógica por *features/módulos*, para escalar de forma limpa:
+A arquitetura do frontend baseia-se numa separação lógica por _features/módulos_, para escalar de forma limpa:
 
 ```text
 src/
@@ -72,25 +72,32 @@ src/
 ## 🛠️ Como Iniciar (Setup Local)
 
 ### 1. Pré-requisitos
+
 - [Node.js](https://nodejs.org/en/) (Versão 18+)
 - Gestor de pacotes (`npm`, `yarn` ou `pnpm`)
 
 ### 2. Instalar Dependências
+
 Na raiz do diretório `mobogo-admin-frontend`, execute:
+
 ```bash
 npm install
 ```
 
 ### 3. Variáveis de Ambiente
+
 Crie um ficheiro `.env` na raiz do projeto e configure o endpoint da API:
+
 ```env
 VITE_API_URL=http://localhost:3000/api
 ```
 
 ### 4. Executar Servidor de Desenvolvimento
+
 ```bash
 npm run dev
 ```
+
 A aplicação ficará disponível em `http://localhost:3333` (ou na porta definida pelo Vite).
 
 ---
@@ -98,11 +105,11 @@ A aplicação ficará disponível em `http://localhost:3333` (ou na porta defini
 ## 📐 Padrões Adotados (Guidelines)
 
 1. **Carregamento de Dados (Skeletons):**
-   - Utilizamos o componente `TableSkeleton` durante o estado `isLoading` nas chamadas via *React Query*. Isto melhora massivamente a experiência do utilizador ao evitar ecrãs em branco ou *layout shifts*.
+   - Utilizamos o componente `TableSkeleton` durante o estado `isLoading` nas chamadas via _React Query_. Isto melhora massivamente a experiência do utilizador ao evitar ecrãs em branco ou _layout shifts_.
 2. **Separação de Responsabilidades:**
    - As Páginas (`src/app`) são responsáveis por orquestrar a lógica (buscar dados, lidar com estados de formulário).
    - Componentes UI (`src/components`) não devem conhecer o contexto de negócio. Devem receber propriedades e emitir eventos (callbacks).
 3. **Formatação e Validação:**
    - Todos os formulários que interagem com a API usam a combinação `React Hook Form` + esquema `Zod` de modo a barrar erros de input antes sequer de tocarem na rede.
 4. **Layout Colapsável:**
-   - A *Sidebar* suporta um modo compacto para expandir o ecrã útil ao analisar as extensas tabelas de dados de transações e bilhética.
+   - A _Sidebar_ suporta um modo compacto para expandir o ecrã útil ao analisar as extensas tabelas de dados de transações e bilhética.

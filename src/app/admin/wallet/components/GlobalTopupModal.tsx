@@ -57,10 +57,11 @@ export function GlobalTopupModal({
   isLoading,
 }: GlobalTopupModalProps) {
   // Busca apenas utilizadores da plataforma
-  const { data, isLoading: loadingUsers } = useApiQuery<{ data: { id: string; name: string; phone: string }[]; items?: any; meta: any }>(
-    ['users-for-topup'],
-    '/iam/users?limit=100'
-  );
+  const { data, isLoading: loadingUsers } = useApiQuery<{
+    data: { id: string; name: string; phone: string }[];
+    items?: any;
+    meta: any;
+  }>(['users-for-topup'], '/iam/users?limit=100');
 
   const users = data?.items || data?.data || [];
 
@@ -110,7 +111,13 @@ export function GlobalTopupModal({
                   >
                     <FormControl>
                       <SelectTrigger className="bg-white dark:bg-[#1a1a1a]">
-                        <SelectValue placeholder={loadingUsers ? "A carregar utilizadores..." : "Selecione o utilizador"} />
+                        <SelectValue
+                          placeholder={
+                            loadingUsers
+                              ? 'A carregar utilizadores...'
+                              : 'Selecione o utilizador'
+                          }
+                        />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent className="bg-white dark:bg-[#1a1a1a]">

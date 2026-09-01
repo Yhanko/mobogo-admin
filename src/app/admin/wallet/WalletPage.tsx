@@ -24,7 +24,11 @@ type Transaction = {
   amount: number;
   balanceBefore: number;
   balanceAfter: number;
-  wallet: { balance: number; currency: string; user: { name: string; phone: string } };
+  wallet: {
+    balance: number;
+    currency: string;
+    user: { name: string; phone: string };
+  };
   createdAt: string;
   reference: string;
 };
@@ -96,9 +100,15 @@ export function WalletPage() {
     }
   };
 
-  const handleGlobalTopupSubmit = (userId: string, amount: number, reference?: string) => {
+  const handleGlobalTopupSubmit = (
+    userId: string,
+    amount: number,
+    reference?: string
+  ) => {
     const dto = { amount, reference: reference || undefined };
-    doTopup({ id: userId, data: dto } as any, { onSuccess: () => setIsGlobalTopupOpen(false) });
+    doTopup({ id: userId, data: dto } as any, {
+      onSuccess: () => setIsGlobalTopupOpen(false),
+    });
   };
 
   const txColumns: ColumnDef<Transaction>[] = [
@@ -131,7 +141,7 @@ export function WalletPage() {
       cell: ({ row }) => {
         const type = row.original.type;
         const isCredit = row.original.balanceAfter > row.original.balanceBefore;
-        
+
         let label = TYPE_MAP[type] || type;
         if (type === 'PAYMENT') {
           label = isCredit ? 'Recebimento (Entrada)' : 'Pagamento (Saída)';
@@ -182,8 +192,8 @@ export function WalletPage() {
               user: {
                 name: row.original.wallet.user?.name,
                 phone: row.original.wallet.user?.phone,
-                role: ''
-              }
+                role: '',
+              },
             } as Wallet);
             setIsViewBalanceOpen(true);
           }}
@@ -218,9 +228,7 @@ export function WalletPage() {
       accessorKey: 'balance',
       header: 'Saldo Atual',
       cell: () => (
-        <span className="font-mono font-bold text-slate-400">
-          ****
-        </span>
+        <span className="font-mono font-bold text-slate-400">****</span>
       ),
     },
     {
@@ -314,7 +322,7 @@ export function WalletPage() {
         userName={selectedWallet?.user?.name || ''}
         isLoading={isTopuping || isWithdrawing}
       />
-      
+
       <GlobalTopupModal
         open={isGlobalTopupOpen}
         onOpenChange={setIsGlobalTopupOpen}

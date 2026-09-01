@@ -44,7 +44,10 @@ export function TicketsPage() {
   const { mutate: simulateScan, isPending: isSimulating } = useApiMutation(
     'post',
     (id: string) => `/tickets/admin/${id}/simulate-scan`,
-    { invalidateKeys: [['tickets'], ['wallet-history'], ['wallets']], showSuccessToast: true }
+    {
+      invalidateKeys: [['tickets'], ['wallet-history'], ['wallets']],
+      showSuccessToast: true,
+    }
   );
 
   const handleCancelConfirm = (reason: string) => {

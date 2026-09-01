@@ -90,8 +90,7 @@ export function LocationPage() {
       accessorKey: 'lastUpdatedAt',
       header: 'Última Atualização',
       cell: ({ row }) => {
-        const timestamp =
-          row.original.lastUpdatedAt || row.original.updatedAt;
+        const timestamp = row.original.lastUpdatedAt || row.original.updatedAt;
         return (
           <span className="text-sm">
             {timestamp ? format(new Date(timestamp), 'HH:mm:ss') : 'N/A'}

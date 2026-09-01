@@ -6,9 +6,6 @@ import { Toaster } from 'sonner';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import { AdminLayout } from './components/layouts/AdminLayout';
 
-// Public
-import { LandingPage } from './app/public/LandingPage';
-
 // Auth
 import { Login } from './app/auth/Login';
 import { Register } from './app/auth/Register';
@@ -69,8 +66,8 @@ function App() {
           </Route>
 
           {/* ── Root & Public ─────────────────────────────────────────────────── */}
-          <Route path="/" element={<LandingPage />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="/" element={<Navigate to="/login" replace />} />
+          <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       </BrowserRouter>
       <Toaster

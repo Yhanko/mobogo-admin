@@ -38,8 +38,9 @@ export function RidesPage() {
       header: 'Data',
       cell: ({ row }) => {
         const startedAt = row.original.startedAt;
-        if (!startedAt) return <span className="text-sm text-slate-500">Pendente</span>;
-        
+        if (!startedAt)
+          return <span className="text-sm text-slate-500">Pendente</span>;
+
         try {
           return (
             <span className="text-sm">

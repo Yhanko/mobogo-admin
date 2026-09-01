@@ -34,18 +34,21 @@ export function useApiMutation<TData = any, TVariables = any>(
 
       if (typeof url === 'function') {
         endpoint = url(variables);
-        
+
         // Se passamos um objecto contendo id e data, o body será apenas o data
         if (
-          variables && 
-          typeof variables === 'object' && 
-          'data' in variables && 
+          variables &&
+          typeof variables === 'object' &&
+          'data' in variables &&
           Object.keys(variables).includes('id') // pode ter outros também
         ) {
           body = (variables as any).data;
-        } 
+        }
         // Se passamos apenas uma string (ex: um ID), o body não deve ser a string
-        else if (typeof variables === 'string' || typeof variables === 'number') {
+        else if (
+          typeof variables === 'string' ||
+          typeof variables === 'number'
+        ) {
           body = {} as any;
         }
       } else {

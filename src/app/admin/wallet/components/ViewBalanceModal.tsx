@@ -39,9 +39,12 @@ export function ViewBalanceModal({
           </div>
           <div className="text-center">
             <h2 className="text-4xl font-bold text-slate-900 font-mono">
-              {balance} <span className="text-2xl text-slate-500">{currency}</span>
+              {balance}{' '}
+              <span className="text-2xl text-slate-500">{currency}</span>
             </h2>
-            <p className="text-sm text-slate-500 mt-2">Valor disponível para operações</p>
+            <p className="text-sm text-slate-500 mt-2">
+              Valor disponível para operações
+            </p>
           </div>
         </div>
       </DialogContent>

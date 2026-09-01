@@ -32,7 +32,11 @@ import { useApiQuery } from '@/hooks/useApi';
 
 const createAgentSchema = z.object({
   userId: z.string().min(1, 'Selecione um utilizador'),
-  dailyTicketLimit: z.coerce.number().min(1, 'O limite deve ser no mínimo 1').max(1000, 'O limite máximo é 1000').optional(),
+  dailyTicketLimit: z.coerce
+    .number()
+    .min(1, 'O limite deve ser no mínimo 1')
+    .max(1000, 'O limite máximo é 1000')
+    .optional(),
 });
 
 type CreateAgentFormValues = z.infer<typeof createAgentSchema>;
@@ -86,8 +90,8 @@ export function AgentModal({
         <DialogHeader>
           <DialogTitle>Associar Perfil de Agente</DialogTitle>
           <DialogDescription>
-            Selecione uma conta de utilizador (Agente) existente para ativar
-            os seus limites e permissões de emissão.
+            Selecione uma conta de utilizador (Agente) existente para ativar os
+            seus limites e permissões de emissão.
           </DialogDescription>
         </DialogHeader>
 
@@ -167,7 +171,8 @@ export function AgentModal({
               <Button type="submit" disabled={isLoading || users.length === 0}>
                 {isLoading ? (
                   <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" /> A Guardar...
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" /> A
+                    Guardar...
                   </>
                 ) : (
                   'Guardar Agente'

@@ -43,14 +43,19 @@ export function AdminLayout() {
   return (
     <div className="flex h-screen bg-slate-50 dark:bg-slate-900">
       {/* Sidebar */}
-      <aside 
+      <aside
         className={cn(
-          "border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 hidden md:flex flex-col transition-all duration-300 ease-in-out",
-          isExpanded ? "w-64" : "w-20"
+          'border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 hidden md:flex flex-col transition-all duration-300 ease-in-out',
+          isExpanded ? 'w-64' : 'w-20'
         )}
       >
         <div className="p-6 flex items-center justify-center h-20">
-          <div className={cn("transition-all duration-300 overflow-hidden", isExpanded ? "w-32 opacity-100" : "w-0 opacity-0")}>
+          <div
+            className={cn(
+              'transition-all duration-300 overflow-hidden',
+              isExpanded ? 'w-32 opacity-100' : 'w-0 opacity-0'
+            )}
+          >
             <Logo className="w-32" />
           </div>
           {!isExpanded && (
@@ -75,19 +80,24 @@ export function AdminLayout() {
                 title={!isExpanded ? item.label : undefined}
               >
                 <item.icon className="w-5 h-5 shrink-0" />
-                <span className={cn("transition-all duration-300", isExpanded ? "opacity-100" : "w-0 opacity-0 hidden")}>
+                <span
+                  className={cn(
+                    'transition-all duration-300',
+                    isExpanded ? 'opacity-100' : 'w-0 opacity-0 hidden'
+                  )}
+                >
                   {item.label}
                 </span>
               </Link>
             );
           })}
-          
+
           <div className="pt-8 pb-4">
             <button
               onClick={() => setIsExpanded(!isExpanded)}
               className={cn(
-                "flex items-center gap-3 px-3 py-2 w-full rounded-md text-sm font-medium transition-colors text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800",
-                !isExpanded && "justify-center px-0"
+                'flex items-center gap-3 px-3 py-2 w-full rounded-md text-sm font-medium transition-colors text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800',
+                !isExpanded && 'justify-center px-0'
               )}
             >
               {isExpanded ? (
@@ -106,14 +116,19 @@ export function AdminLayout() {
           <Button
             variant="ghost"
             className={cn(
-              "w-full text-red-600 hover:text-red-700 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20",
-              isExpanded ? "justify-start" : "justify-center px-0"
+              'w-full text-red-600 hover:text-red-700 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20',
+              isExpanded ? 'justify-start' : 'justify-center px-0'
             )}
             onClick={handleLogout}
-            title={!isExpanded ? "Sair" : undefined}
+            title={!isExpanded ? 'Sair' : undefined}
           >
-            <LogOut className={cn("w-5 h-5 shrink-0", isExpanded && "mr-3")} />
-            <span className={cn("transition-all duration-300", isExpanded ? "opacity-100" : "w-0 opacity-0 hidden")}>
+            <LogOut className={cn('w-5 h-5 shrink-0', isExpanded && 'mr-3')} />
+            <span
+              className={cn(
+                'transition-all duration-300',
+                isExpanded ? 'opacity-100' : 'w-0 opacity-0 hidden'
+              )}
+            >
               Sair
             </span>
           </Button>
