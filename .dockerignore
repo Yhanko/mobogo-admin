@@ -1,0 +1,49 @@
+# ==============================================================================
+# .dockerignore - Mobogo Admin Panel (Frontend)
+# Otimização de contexto de build e segurança contra vazamento de segredos
+# ==============================================================================
+
+# Dependências e compilações locais
+node_modules/
+dist/
+build/
+.npm/
+*.tsbuildinfo
+
+# Controle de versão e IDEs
+.git/
+.gitignore
+.github/
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Arquivos de ambiente e segredos locais (evita vazamento acidental na imagem)
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# Logs e diagnósticos
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Testes e cobertura de código
+coverage/
+*.test.ts
+*.test.tsx
+vitest.config.ts
+
+# Docker e infraestrutura local (não necessários dentro da imagem)
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+
+# Arquivos de sistema operacional e temporários
+.DS_Store
+Thumbs.db
